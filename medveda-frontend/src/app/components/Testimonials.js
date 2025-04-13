@@ -1,6 +1,6 @@
 export default function Testimonials({ testimonials }) {
     return (
-      <section className="py-16 bg-gray-50">
+      <section id="testimonials" className="py-16 bg-gray-50">
         <h2 className="text-center text-3xl font-semibold mb-8">What Users Say</h2>
         <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
           {testimonials.map(t => (

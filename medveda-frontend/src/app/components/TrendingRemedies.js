@@ -2,7 +2,7 @@ export default function TrendingRemedies({ remedies }) {
     if (!remedies?.length) return null;
   
     return (
-      <section className="py-16 bg-white">
+      <section id="remedies" className="py-16 bg-white">
         <h2 className="text-center text-3xl font-semibold mb-10">🔥 Trending Remedies</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
           {remedies.map(remedy => (
