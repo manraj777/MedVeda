@@ -6,13 +6,13 @@ const steps = [
     },
     {
       icon: '🌿',
-      title: 'Learn & Apply',
-      description: 'Follow step-by-step guides with ingredients & instructions.',
+      title: 'Learn',
+      description: 'Understand the benefits, usage and traditional wisdom behind each remedy',
     },
     {
       icon: '🤝',
-      title: 'Contribute Back',
-      description: 'Share your trusted home remedies with the community.',
+      title: 'Apply',
+      description: 'Follow expert guidelines to incorporate remedies into your wellness routine',
     },
   ];
   

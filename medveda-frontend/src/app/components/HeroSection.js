@@ -35,10 +35,10 @@ export default function HeroSection() {
         </button>
       </form>
 
-      {/* Optional CTA button below */}
+      {/* Optional CTA button below
       <button className="mt-6 bg-green-600 text-white px-8 py-3 rounded-lg text-lg hover:bg-green-700 transition">
         Explore Remedies
-      </button>
+      </button> */}
     </section>
   );
 }
