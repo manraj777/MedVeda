@@ -9,17 +9,9 @@ from .serializers import (
 )
 
 
-
 @api_view(['GET'])
-def homepage_view(request):
-    testimonials = Testimonial.objects.all().order_by('-created_at')[:6]
-    # how_it_works = HowItWorksStep.objects.all().order_by('order')
-    # static_sections = StaticSection.objects.all()
-
-    return Response({
-        
-        "testimonials": TestimonialSerializer(testimonials, many=True).data,
-        # "categories": ... future
-        # "trending_remedies": ... future
-    })
+def testimonial_list(request):
+    testimonials = Testimonial.objects.all().order_by('-created_at')[:2]  # optional limit
+    serializer = TestimonialSerializer(testimonials, many=True)
+    return Response(serializer.data)
 
