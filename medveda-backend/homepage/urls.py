@@ -1,6 +1,6 @@
 from django.urls import path
-from .views import trending_remedies
+from . import views
 
 urlpatterns = [
-    path('testimonials/', testimonials),
+    path('testimonials/', views.testimonial_list, name='home'),
 ]
