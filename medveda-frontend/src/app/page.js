@@ -60,6 +60,11 @@ const placeholderTestimonials = [
     comment: 'Clean, simple, and very helpful for common health problems.',
     rating: 4,
   },
+ { name: 'Vijay Kumar',
+  avatar: 'https://i.pravatar.cc/100?img=8',
+  comment: 'Home remedies saved me a bunch of time and money.',
+  rating: 4,
+},
 ];
 
 const placeholderRemedies = [
