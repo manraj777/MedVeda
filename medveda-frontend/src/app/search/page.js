@@ -1,3 +1,5 @@
+"use client"
+
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import API from '../utils/api';
@@ -19,6 +21,8 @@ export default function SearchPage() {
   const [hasNextPage, setHasNextPage] = useState(false);
   const [categories, setCategories] = useState([]);
 
+
+  
   // ✅ Fallback categories
   const fallbackCategories = [
     { name: 'Immunity', slug: 'immunity' },
@@ -26,6 +30,7 @@ export default function SearchPage() {
     { name: 'Skin Care', slug: 'skin-care' },
     { name: 'Stress Relief', slug: 'stress-relief' },
   ];
+
 
   // ✅ Fallback remedies
   const fallbackRemedies = [
@@ -57,6 +62,9 @@ export default function SearchPage() {
 
   // 🔁 Fetch categories
   useEffect(() => {
+
+
+    
     API.get('/remedies/categories/')
       .then((res) => {
         if (res.data?.length > 0) {
@@ -72,7 +80,7 @@ export default function SearchPage() {
 
   // 🔍 Fetch search results
   useEffect(() => {
-    if (!q) return;
+    if (!router.isReady || !q) return; // 👈 wait for router to load
 
     setLoading(true);
 
