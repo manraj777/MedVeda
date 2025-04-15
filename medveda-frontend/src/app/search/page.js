@@ -1,6 +1,8 @@
 "use client"
 
-import { useRouter } from 'next/router';
+import { useSearchParams } from 'next/navigation';
+
+
 import { useEffect, useState } from 'react';
 import API from '../utils/api';
 
@@ -11,8 +13,8 @@ import SkeletonGrid from '../components/SkeletonGrid';
 import PaginationControls from '../components/PaginationControls';
 
 export default function SearchPage() {
-  const router = useRouter();
-  const { q } = router.query;
+    const searchParams = useSearchParams();
+    const q = searchParams.get('q');
 
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -80,7 +82,7 @@ export default function SearchPage() {
 
   // 🔍 Fetch search results
   useEffect(() => {
-    if (!router.isReady || !q) return; // 👈 wait for router to load
+    if (!q) return; // 👈 wait for router to load
 
     setLoading(true);
 
