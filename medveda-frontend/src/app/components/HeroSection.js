@@ -5,7 +5,9 @@ export default function HeroSection() {
 
   const handleSearch = (e) => {
     e.preventDefault();
-    // For now, just log the input (later you can redirect or connect to API)
+    if (query.trim()) {
+      router.push(`/search?q=${encodeURIComponent(query.trim())}`);
+    }
     console.log('Searching for:', query);
   };
 

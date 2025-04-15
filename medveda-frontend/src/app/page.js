@@ -17,7 +17,7 @@ export default function Home() {
 
   useEffect(() => {
     // Fetch testimonials
-    API.get('/testimonials/')
+    API.get('homepage/testimonials/')
       .then(res => setTestimonials(res.data))
       .catch(err => {
         console.warn("Testimonials API failed, using placeholder");
