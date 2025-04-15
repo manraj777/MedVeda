@@ -6,6 +6,7 @@ import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import API from '../utils/api';
 
+import SearchNavbar from '../components/SearchNavbar';
 import SearchHeader from '../components/SearchHeader';
 import SearchFilters from '../components/SearchFilters';
 import SearchResults from '../components/SearchResults';
@@ -117,6 +118,9 @@ export default function SearchPage() {
   };
 
   return (
+    <>
+
+    <SearchNavbar />
     <div className="p-6">
       <SearchHeader query={q} />
       <SearchFilters
@@ -137,5 +141,6 @@ export default function SearchPage() {
         </>
       )}
     </div>
+    </>
   );
 }
