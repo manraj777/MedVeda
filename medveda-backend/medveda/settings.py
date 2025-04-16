@@ -23,6 +23,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+
+    # Local apps
+    'users.apps.UsersConfig',
+    'homepage',
+    'remedies',
+    'ai',
+
     # Third-party
     'rest_framework',
     'rest_framework_simplejwt',
@@ -30,14 +37,9 @@ INSTALLED_APPS = [
     'django_celery_results',
     'django_celery_beat',
 
-    # Local apps
-    'homepage',
-    'remedies',
-    'users',
-    # Add others like 'ai', 'newsletter' if needed
+    
 ]
 
-AUTH_USER_MODEL = 'auth.User'  # Update if using a custom User model
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',  # CORS must come before CommonMiddleware
