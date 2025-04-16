@@ -2,7 +2,7 @@
 
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
-import { useAuth } from './AuthContext';
+import { useAuth } from './auth/AuthContext';
 
 export default function SearchNavbar() {
   const searchParams = useSearchParams();
@@ -24,7 +24,7 @@ export default function SearchNavbar() {
 
   const handleAccountClick = () => {
     if (!user) {
-      router.push('/auth/(login)');
+      router.push('/auth/loginpage');
     } else {
       router.push('/account');
     }

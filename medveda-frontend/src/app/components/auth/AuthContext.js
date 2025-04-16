@@ -1,7 +1,7 @@
 'use client';
 
 import { createContext, useContext, useEffect, useState } from 'react';
-import { getToken, storeToken, removeToken } from '../utils/auth';
+import { getToken, storeToken, removeToken } from '@/app/utils/auth';
 
 const AuthContext = createContext();
 

@@ -1,5 +1,5 @@
 'use client';
-import { useAuth } from './AuthContext';
+import { useAuth } from './auth/AuthContext';
 import { useRouter } from 'next/navigation';
 
 export default function Navbar() {
@@ -36,7 +36,7 @@ export default function Navbar() {
           </button>
         ) : (
           <button
-            onClick={() => router.push('/auth/(login)')}
+            onClick={() => router.push('/auth/loginpage')}
             className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition"
           >
             Sign In

@@ -5,7 +5,7 @@ import { z } from 'zod';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
 import { useAuth } from './AuthContext';
-import API from '../utils/api';
+import API from '@/app/utils/api';
 
 export default function AuthForm({ mode }) {
   const isLogin = mode === 'login';
@@ -40,7 +40,7 @@ export default function AuthForm({ mode }) {
       } else {
         await API.post('/users/signup/', data);
         toast.success('Account created! You can log in now');
-        router.push('/auth/(login)');
+        router.push('/auth/loginpage');
       }
     } catch (err) {
       toast.error('Authentication failed. Please check credentials.');
@@ -94,9 +94,9 @@ export default function AuthForm({ mode }) {
 
       <p className="text-sm text-center mt-6 text-gray-600">
         {isLogin ? (
-          <>Don't have an account? <a href="/auth/(signup)" className="text-green-700 hover:underline">Sign up</a></>
+          <>Don't have an account? <a href="/auth/signuppage" className="text-green-700 hover:underline">Sign up</a></>
         ) : (
-          <>Already have an account? <a href="/auth/(login)" className="text-green-700 hover:underline">Log in</a></>
+          <>Already have an account? <a href="/auth/loginpage" className="text-green-700 hover:underline">Log in</a></>
         )}
       </p>
     </div>
