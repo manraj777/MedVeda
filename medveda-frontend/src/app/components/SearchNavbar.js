@@ -2,14 +2,15 @@
 
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
+import { useAuth } from './AuthContext';
 
 export default function SearchNavbar() {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const { user } = useAuth();
   const q = searchParams.get('q');
   const [searchQuery, setSearchQuery] = useState('');
 
-  // Keep input value in sync with current query param
   useEffect(() => {
     if (q) setSearchQuery(q);
   }, [q]);
@@ -18,6 +19,14 @@ export default function SearchNavbar() {
     e.preventDefault();
     if (searchQuery.trim()) {
       router.push(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+    }
+  };
+
+  const handleAccountClick = () => {
+    if (!user) {
+      router.push('/auth/(login)');
+    } else {
+      router.push('/account');
     }
   };
 
@@ -53,7 +62,7 @@ export default function SearchNavbar() {
         <button onClick={() => router.push('/saved')} className="hover:text-green-600">
           Saved
         </button>
-        <button onClick={() => router.push('/account')} className="hover:text-green-600">
+        <button onClick={handleAccountClick} className="hover:text-green-600">
           Account
         </button>
       </div>
