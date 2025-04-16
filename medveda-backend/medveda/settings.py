@@ -100,7 +100,7 @@ CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = os.getenv("CORS_ALLOWED_ORIGINS", "http://localhost:3000").split(",")
 
 
-
+AUTH_USER_MODEL = 'users.User'
 
 # DRF Settings
 REST_FRAMEWORK = {
