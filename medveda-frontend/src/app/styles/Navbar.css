@@ -1,4 +1,6 @@
-
+html {
+  scroll-padding-top: 5rem; /* Adjust to match navbar height */
+}
 .bg-white\/95 {
   background-color: rgb(255 255 255 / 0.95);
 }
@@ -128,7 +130,7 @@ a {
 [role=button], button {
   cursor: pointer;
 }
-button, input:where([type=button]), input:where([type=reset]), input:where([type=submit]) {
+button {
   -webkit-appearance: button;
   appearance: button;
   /* background-color: transparent; */
@@ -137,7 +139,7 @@ button, input:where([type=button]), input:where([type=reset]), input:where([type
 button, select {
   text-transform: none;
 }
-button, input, optgroup, select, textarea {
+button {
   font-family: inherit;
   font-feature-settings: inherit;
   font-variation-settings: inherit;
