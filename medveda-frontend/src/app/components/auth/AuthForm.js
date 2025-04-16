@@ -1,37 +1,49 @@
 'use client';
-import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
-import API from '../utils/api';
 import { useAuth } from './AuthContext';
+import API from '../utils/api';
 
 export default function AuthForm({ mode }) {
   const isLogin = mode === 'login';
   const router = useRouter();
   const { login } = useAuth();
 
-  const [form, setForm] = useState({ username: '', email: '', password: '' });
-  const [error, setError] = useState('');
+  // Zod schema
+  const schema = z.object({
+    username: z.string().min(3, 'Username is required'),
+    password: z.string().min(4, 'Password must be at least 4 characters'),
+    email: isLogin ? z.string().optional() : z.string().email('Invalid email'),
+  });
 
-  const handleChange = (e) =>
-    setForm({ ...form, [e.target.name]: e.target.value });
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm({
+    resolver: zodResolver(schema),
+  });
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
+  const onSubmit = async (data) => {
     try {
       if (isLogin) {
         const res = await API.post('/users/login/', {
-          username: form.username,
-          password: form.password,
+          username: data.username,
+          password: data.password,
         });
         login({ username: res.data.user }, res.data.access);
+        toast.success('Logged in successfully');
         router.push('/');
       } else {
-        await API.post('/users/signup/', form);
+        await API.post('/users/signup/', data);
+        toast.success('Account created! You can log in now');
         router.push('/auth/(login)');
       }
     } catch (err) {
-      setError('Something went wrong. Check your credentials.');
+      toast.error('Authentication failed. Please check credentials.');
     }
   };
 
@@ -41,35 +53,41 @@ export default function AuthForm({ mode }) {
         {isLogin ? 'Log In to Your Account' : 'Create an Account'}
       </h2>
 
-      {error && <p className="text-red-500 mb-4">{error}</p>}
-
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <input
-          name="username"
-          placeholder="Username"
-          onChange={handleChange}
-          className="w-full p-2 border rounded"
-        />
-
-        {!isLogin && (
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <div>
           <input
-            name="email"
-            type="email"
-            placeholder="Email"
-            onChange={handleChange}
+            {...register('username')}
+            placeholder="Username"
             className="w-full p-2 border rounded"
           />
+          {errors.username && <p className="text-red-500 text-sm mt-1">{errors.username.message}</p>}
+        </div>
+
+        {!isLogin && (
+          <div>
+            <input
+              {...register('email')}
+              placeholder="Email"
+              className="w-full p-2 border rounded"
+            />
+            {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>}
+          </div>
         )}
 
-        <input
-          name="password"
-          type="password"
-          placeholder="Password"
-          onChange={handleChange}
-          className="w-full p-2 border rounded"
-        />
+        <div>
+          <input
+            {...register('password')}
+            type="password"
+            placeholder="Password"
+            className="w-full p-2 border rounded"
+          />
+          {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>}
+        </div>
 
-        <button className="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700 transition">
+        <button
+          disabled={isSubmitting}
+          className="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700 transition disabled:opacity-50"
+        >
           {isLogin ? 'Log In' : 'Sign Up'}
         </button>
       </form>
