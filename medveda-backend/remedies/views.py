@@ -49,7 +49,7 @@ def category_list(request):
 # ——— Detail endpoint ———————————————————————————
 class RemedyDetailView(generics.RetrieveAPIView):
     """
-    GET /api/remedies/{slug}/
+    GET /remedies/{slug}/
     """
     queryset         = Remedy.objects.all()
     serializer_class = RemedyDetailSerializer
