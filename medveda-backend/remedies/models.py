@@ -4,14 +4,14 @@ from django.utils.text import slugify
 
 class Category(models.Model):
     name = models.CharField(max_length=100)
-    slug = models.SlugField(unique=True)
+    slug = models.SlugField(unique=True,max_length=120)
 
     def __str__(self):
         return self.name
 
 class Remedy(models.Model):
     title = models.CharField(max_length=200)
-    slug = models.SlugField(unique=True, blank=True)
+    slug = models.SlugField(unique=True, blank=True, max_length=200)
     description = models.TextField()
     ingredients = models.TextField()
     preparation = models.TextField()

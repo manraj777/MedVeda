@@ -1,7 +1,14 @@
+# remedies/management/commands/import_remedies.py
+
+import sys
 import csv
 from django.core.management.base import BaseCommand
 from remedies.models import Remedy, Category
 from django.utils.text import slugify
+
+# line to increase the maximum field size
+
+csv.field_size_limit(10_000_000)  # ~10 MB per field
 
 class Command(BaseCommand):
     help = 'Import remedies from CSV'
@@ -27,27 +34,29 @@ class Command(BaseCommand):
                     self.stdout.write(self.style.WARNING("⚠️ Skipping row with empty title"))
                     continue
 
-                category_name = row.get('category', 'General').strip()
-                category, _ = Category.objects.get_or_create(
-                    name=category_name,
-                    defaults={'slug': slugify(category_name)}
+                # Category
+                cat_name = row['category'].strip() or 'General Wellness'
+                cat, _ = Category.objects.get_or_create(
+                    name=cat_name,
+                    defaults={'slug': slugify(cat_name)}
                 )
 
-                remedy, created = Remedy.objects.get_or_create(
+                # Get or create Remedy
+                obj, created = Remedy.objects.get_or_create(
                     title=title,
                     defaults={
-                        'slug': slugify(title),
+                        'slug': slugify(title)[:200],
                         'description': row.get('description', '').strip(),
                         'ingredients': row.get('ingredients', '').strip(),
                         'preparation': row.get('preparation', '').strip(),
                         'health_benefits': row.get('health_benefits', '').strip(),
-                        'image': row.get('image') or row.get('image_url', ''),
-                        'rating': float(row.get('rating', 0) or 0),
-                        'category': category,
+                        'image': row.get('image_url', '').strip() or None,
+                        'rating': float(row.get('rating') or 0),
+                        'category': cat,
                     }
                 )
 
                 if created:
                     count += 1
 
-        self.stdout.write(self.style.SUCCESS(f"✔️ Successfully imported {count} remedies."))
+        self.stdout.write(self.style.SUCCESS(f"✔️ Imported {count} new remedies."))
