@@ -6,7 +6,7 @@ import API from './utils/api';
 import Navbar from './components/Navbar';
 import HeroSection from './components/HeroSection';
 import HowItWorks from './components/HowItWorks';
-import Footer from './components/Footer';
+import Footer from './components/footer';
 
 import Testimonials from './components/Testimonials';
 import TrendingRemedies from './components/TrendingRemedies';
