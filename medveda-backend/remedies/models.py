@@ -10,16 +10,21 @@ class Category(models.Model):
 
 class Remedy(models.Model):
     title = models.CharField(max_length=200)
+    slug = models.SlugField(unique=True, blank=True)
     description = models.TextField()
     ingredients = models.TextField()
-    instructions = models.TextField()
-    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, related_name='remedies')
-    image_url = models.URLField(blank=True)
+    preparation = models.TextField()
+    health_benefits = models.TextField()
+    image = models.URLField(blank=True, null=True)
+    category = models.ForeignKey('Category', on_delete=models.SET_NULL, null=True)
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     rating = models.FloatField(default=0)
-    is_verified = models.BooleanField(default=False)
-    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.title)
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.title
-
