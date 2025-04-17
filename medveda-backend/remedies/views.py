@@ -19,7 +19,7 @@ def search_remedies(request):
     category   = request.GET.get('category')
     min_rating = request.GET.get('min_rating')
 
-    qs = Remedy.objects.filter(is_verified=True)
+    qs = Remedy.objects.filter()
 
     if query:
         qs = qs.annotate(search=SearchVector('title','description','ingredients')) \

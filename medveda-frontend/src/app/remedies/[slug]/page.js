@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import API from '@/utils/api';
+import API from '@/app/utils/api';
 
 const fallbackRemedy = {
   title: 'Tulsi Ginger Kadha',
