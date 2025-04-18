@@ -21,6 +21,8 @@ class Remedy(models.Model):
     created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     rating = models.FloatField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
+    is_approved = models.BooleanField(default=True)  # default=True for now
+
 
     def save(self, *args, **kwargs):
         if not self.slug:
