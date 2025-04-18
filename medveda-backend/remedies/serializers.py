@@ -49,6 +49,7 @@ class RemedyDetailSerializer(serializers.ModelSerializer):
             'image',
             'category',
             'rating',
+            'reviews',
             'created_at',
         ]
         read_only_fields = ['created_at']

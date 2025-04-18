@@ -1,5 +1,6 @@
 from rest_framework import generics, permissions
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view,permission_classes
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
 from django.contrib.postgres.search import SearchVector, SearchQuery
@@ -11,6 +12,7 @@ from .serializers import (
     CategorySerializer,
     ReviewSerializer
 )
+from .permissions import IsReviewAuthorOrReadOnly
 
 
 # ——— Search endpoint ————————————————————————————
@@ -20,7 +22,7 @@ def search_remedies(request):
     category   = request.GET.get('category')
     min_rating = request.GET.get('min_rating')
 
-    qs = Remedy.objects.filter()
+    qs = Remedy.objects.filter().order_by('id')
 
     if query:
         qs = qs.annotate(search=SearchVector('title','description','ingredients')) \
@@ -59,6 +61,7 @@ class RemedyDetailView(generics.RetrieveAPIView):
 
 # ——— Review endpoint ———————————————————————————
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def create_review(request, slug):
     try:
         remedy = Remedy.objects.get(slug=slug)
@@ -67,7 +70,11 @@ def create_review(request, slug):
 
     serializer = ReviewSerializer(data=request.data)
     if serializer.is_valid():
+        
+        # Save the review
         serializer.save(remedy=remedy, user=request.user if request.user.is_authenticated else None)
+        
+        # Update average rating
         update_remedy_rating(remedy)
         return Response(serializer.data, status=201)
     return Response(serializer.errors, status=400)
@@ -76,7 +83,8 @@ def create_review(request, slug):
 class ReviewUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [permissions.IsAuthenticated, IsReviewAuthorOrReadOnly]
+
 
     def perform_update(self, serializer):
         review = serializer.save()

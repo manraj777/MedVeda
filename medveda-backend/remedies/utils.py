@@ -1,5 +1,4 @@
 from django.db.models import Avg
-from .models  import Remedy
 
 def update_remedy_rating(remedy):
     reviews = remedy.reviews.all()
