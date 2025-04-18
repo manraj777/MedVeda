@@ -113,7 +113,30 @@ export default function RemedyDetailPage() {
 
         <div className="flex flex-wrap gap-4 mb-6">
           <button className="border px-4 py-2 rounded hover:bg-gray-100 transition">🔗 Share</button>
-          <button className="border px-4 py-2 rounded hover:bg-gray-100 transition">💾 Save</button>
+          <button
+  className={`border px-4 py-2 rounded transition ${
+    remedy.is_saved ? 'bg-green-100 border-green-300 text-green-700' : 'hover:bg-gray-100'
+  }`}
+  onClick={async () => {
+    if (!isLoggedIn) return toast.error("Login to save remedies");
+    try {
+      if (remedy.is_saved) {
+        await API.delete(`/users/saved/${remedy.id}/`);
+        setRemedy({ ...remedy, is_saved: false });
+        toast.success('Removed from saved');
+      } else {
+        await API.post(`/users/saved/${remedy.id}/`);
+        setRemedy({ ...remedy, is_saved: true });
+        toast.success('Saved!');
+      }
+    } catch {
+      toast.error('Failed to update saved remedies');
+    }
+  }}
+>
+  {remedy.is_saved ? '💾 Saved' : '💾 Save'}
+</button>
+
         </div>
 
         <section className="mb-8">

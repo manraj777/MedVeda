@@ -35,6 +35,13 @@ class ReviewSerializer(serializers.ModelSerializer):
 class RemedyDetailSerializer(serializers.ModelSerializer):
     category = CategorySerializer()
     reviews = ReviewSerializer(many=True, read_only=True)
+    is_saved = serializers.SerializerMethodField()
+
+    def get_is_saved(self, obj):
+        user = self.context['request'].user
+        if user.is_authenticated:
+            return obj.savedremedy_set.filter(user=user).exists()
+        return False
 
     class Meta:
         model  = Remedy

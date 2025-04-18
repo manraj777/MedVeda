@@ -126,3 +126,17 @@ def submit_remedy(request):
         serializer.save()
         return Response({'message': 'Remedy submitted successfully!'}, status=201)
     return Response(serializer.errors, status=400)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def save_remedy(request, remedy_id):
+    remedy = Remedy.objects.get(id=remedy_id)
+    SavedRemedy.objects.get_or_create(user=request.user, remedy=remedy)
+    return Response({'status': 'saved'})
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def unsave_remedy(request, remedy_id):
+    SavedRemedy.objects.filter(user=request.user, remedy__id=remedy_id).delete()
+    return Response({'status': 'unsaved'})

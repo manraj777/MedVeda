@@ -2,7 +2,8 @@ from django.urls import path
 from .views import (search_remedies, category_list,
                      RemedyDetailView, create_review, 
                      ReviewUpdateDeleteView,RemedyReviewsView,
-                     get_saved_remedies,submit_remedy
+                     get_saved_remedies,submit_remedy,
+                     save_remedy, unsave_remedy
 )
 
 urlpatterns = [
@@ -14,6 +15,9 @@ urlpatterns = [
 path('remedies/<slug:slug>/reviews/', RemedyReviewsView.as_view(), name='remedy-reviews'),
 path('users/saved/', get_saved_remedies),
 path('remedies/submit/', submit_remedy),
+path('saved/<int:remedy_id>/', save_remedy, name='save-remedy'),
+path('saved/<int:remedy_id>/', unsave_remedy, name='unsave-remedy'),
+
 
 
 ]
