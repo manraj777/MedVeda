@@ -4,11 +4,12 @@ from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
 from django.contrib.postgres.search import SearchVector, SearchQuery
 
-from .models import Remedy, Category
+from .models import Remedy, Category, Review
 from .serializers import (
     RemedyListSerializer,
     RemedyDetailSerializer,
     CategorySerializer,
+    ReviewSerializer
 )
 
 
@@ -54,3 +55,20 @@ class RemedyDetailView(generics.RetrieveAPIView):
     queryset         = Remedy.objects.all()
     serializer_class = RemedyDetailSerializer
     lookup_field     = 'slug'
+
+
+# ——— Review endpoint ———————————————————————————
+@api_view(['POST'])
+def create_review(request, slug):
+    try:
+        remedy = Remedy.objects.get(slug=slug)
+    except Remedy.DoesNotExist:
+        return Response({'error': 'Remedy not found'}, status=404)
+
+    serializer = ReviewSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save(remedy=remedy, user=request.user if request.user.is_authenticated else None)
+        return Response(serializer.data, status=201)
+    return Response(serializer.errors, status=400)
+
+
