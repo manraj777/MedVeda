@@ -1,6 +1,6 @@
 # remedies/serializers.py
 from rest_framework import serializers
-from .models import Remedy, Category ,Review
+from .models import Remedy, Category ,Review, SavedRemedy
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -56,3 +56,10 @@ class RemedyDetailSerializer(serializers.ModelSerializer):
 
 
 
+class SavedRemedySerializer(serializers.ModelSerializer):
+    user = serializers.StringRelatedField(read_only=True)
+    remedy = RemedyListSerializer(read_only=True)
+
+    class Meta:
+        model = SavedRemedy
+        fields = ['id', 'user', 'remedy', 'created_at']

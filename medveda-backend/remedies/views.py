@@ -102,3 +102,5 @@ class RemedyReviewsView(generics.ListAPIView):
     def get_queryset(self):
         slug = self.kwargs.get('slug')
         return Review.objects.filter(remedy__slug=slug).order_by('-created_at')
+
+

@@ -42,3 +42,12 @@ class Review(models.Model):
 
     def __str__(self):
         return f"Review for {self.remedy.title} by {self.user or 'Anonymous'}"
+
+
+class SavedRemedy(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    remedy = models.ForeignKey(Remedy, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'remedy')
