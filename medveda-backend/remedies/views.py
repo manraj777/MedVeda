@@ -1,9 +1,9 @@
-from rest_framework import generics
+from rest_framework import generics, permissions
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
 from django.contrib.postgres.search import SearchVector, SearchQuery
-
+from .utils import update_remedy_rating
 from .models import Remedy, Category, Review
 from .serializers import (
     RemedyListSerializer,
@@ -68,7 +68,29 @@ def create_review(request, slug):
     serializer = ReviewSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save(remedy=remedy, user=request.user if request.user.is_authenticated else None)
+        update_remedy_rating(remedy)
         return Response(serializer.data, status=201)
     return Response(serializer.errors, status=400)
 
 
+class ReviewUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    def perform_update(self, serializer):
+        review = serializer.save()
+        update_remedy_rating(review.remedy)
+
+    def perform_destroy(self, instance):
+        remedy = instance.remedy
+        instance.delete()
+        update_remedy_rating(remedy)
+
+class RemedyReviewsView(generics.ListAPIView):
+    serializer_class = ReviewSerializer
+    pagination_class = PageNumberPagination
+
+    def get_queryset(self):
+        slug = self.kwargs.get('slug')
+        return Review.objects.filter(remedy__slug=slug).order_by('-created_at')
