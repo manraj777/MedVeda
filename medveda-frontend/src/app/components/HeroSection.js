@@ -1,10 +1,20 @@
+'use client';
+
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import '../styles/HeroSection.css';
 
 export default function HeroSection() {
-  const [query, setQuery] = useState(''); // State to store the search query
+  const [query, setQuery] = useState('');
+  const router = useRouter();
+  // State to store the search query
 
   const handleSearch = (e) => {
+    e.preventDefault();
+    if (query.trim()) {
+      router.push(`/search?q=${encodeURIComponent(query.trim())}`);
+    }
+    console.log('Searching for:', query);
     e.preventDefault(); // Prevent the default form submission behavior
     console.log('Searching for:', query); // Log the query (or connect to an API)
   };
