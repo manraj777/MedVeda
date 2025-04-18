@@ -5,12 +5,13 @@ from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
 from django.contrib.postgres.search import SearchVector, SearchQuery
 from .utils import update_remedy_rating
-from .models import Remedy, Category, Review
+from .models import Remedy, Category, Review,SavedRemedy
 from .serializers import (
     RemedyListSerializer,
     RemedyDetailSerializer,
     CategorySerializer,
-    ReviewSerializer
+    ReviewSerializer,
+
 )
 from .permissions import IsReviewAuthorOrReadOnly
 
@@ -104,3 +105,24 @@ class RemedyReviewsView(generics.ListAPIView):
         return Review.objects.filter(remedy__slug=slug).order_by('-created_at')
 
 
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_saved_remedies(request):
+    saved = SavedRemedy.objects.filter(user=request.user).select_related('remedy')
+    remedies = [s.remedy for s in saved]
+    serializer = RemedyListSerializer(remedies, many=True)
+    return Response(serializer.data)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def submit_remedy(request):
+    data = request.data.copy()
+    data['created_by'] = request.user.id
+    data['is_approved'] = False  # mark as pending
+
+    serializer = RemedyDetailSerializer(data=data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response({'message': 'Remedy submitted successfully!'}, status=201)
+    return Response(serializer.errors, status=400)

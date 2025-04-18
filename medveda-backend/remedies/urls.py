@@ -1,5 +1,9 @@
 from django.urls import path
-from .views import search_remedies, category_list, RemedyDetailView, create_review, ReviewUpdateDeleteView,RemedyReviewsView
+from .views import (search_remedies, category_list,
+                     RemedyDetailView, create_review, 
+                     ReviewUpdateDeleteView,RemedyReviewsView,
+                     get_saved_remedies,submit_remedy
+)
 
 urlpatterns = [
     path('search/', search_remedies, name='search-remedies'),
@@ -8,5 +12,8 @@ urlpatterns = [
      path('remedies/<slug:slug>/reviews/', create_review, name='create-review'),
      path('reviews/<int:pk>/', ReviewUpdateDeleteView.as_view(), name='review-update-delete'),
 path('remedies/<slug:slug>/reviews/', RemedyReviewsView.as_view(), name='remedy-reviews'),
+path('users/saved/', get_saved_remedies),
+path('remedies/submit/', submit_remedy),
+
 
 ]
