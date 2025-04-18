@@ -5,6 +5,8 @@ from rest_framework.permissions import AllowAny
 from .serializers import UserSignupSerializer, UserLoginSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import logout as django_logout
+from remedies.serializers import RemedyListSerializer
+from rest_framework.permissions import IsAuthenticated
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
@@ -36,3 +38,11 @@ def logout(request):
     response = Response({"detail": "Logged out"})
     response.delete_cookie('access_token')
     return response
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def my_submissions(request):
+    remedies = request.user.submitted_remedies.all()
+    serializer = RemedyListSerializer(remedies, many=True)
+    return Response(serializer.data)

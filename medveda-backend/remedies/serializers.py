@@ -58,6 +58,7 @@ class RemedyDetailSerializer(serializers.ModelSerializer):
             'rating',
             'reviews',
             'created_at',
+            'is_saved'
         ]
         read_only_fields = ['created_at']
 

@@ -18,7 +18,7 @@ class Remedy(models.Model):
     health_benefits = models.TextField()
     image = models.URLField(blank=True, null=True)
     category = models.ForeignKey('Category', on_delete=models.SET_NULL, null=True)
-    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='submitted_remedies')
     rating = models.FloatField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     is_approved = models.BooleanField(default=True)  # default=True for now
