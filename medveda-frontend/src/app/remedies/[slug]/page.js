@@ -50,20 +50,7 @@ export default function RemedyDetailPage() {
   const [loading, setLoading] = useState(true);
   const [reviews, setReviews] = useState([]);
 
-  // useEffect(() => {
-  //   if (slug) {
-  //     API.get(`/remedies/${slug}/`)
-  //       .then((res) => {
-  //         setRemedy(res.data);
-  //         setReviews(res.data.reviews || []);
-  //       })
-  //       .catch(() => {
-  //         setRemedy(fallbackRemedy);
-  //         setReviews(fallbackReviews);
-  //       })
-  //       .finally(() => setLoading(false));
-  //   }
-  // }, [slug]);
+
 
 
   useEffect(() => {
