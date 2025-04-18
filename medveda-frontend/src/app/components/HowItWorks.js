@@ -1,3 +1,4 @@
+import '../styles/HowItWorks.css';
 const steps = [
     {
       icon: '🔍',
@@ -18,20 +19,24 @@ const steps = [
   
   export default function HowItWorks() {
     return (
-      <section id="how-it-works" className="py-20 bg-white text-center px-4">
-        <h2 className="text-4xl font-bold mb-12 text-green-700">How It Works</h2>
-        <div className="grid md:grid-cols-3 gap-10 max-w-6xl mx-auto">
+      <section id="how-it-works" className="py-20">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl font-bold text-center mb-4">How It Works</h2>
+          <p class="text-gray-600 text-center mb-16">Your journey to natural wellness in three simple steps</p>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
           {steps.map((step, index) => (
             <div
               key={index}
-              className="p-6 border rounded-lg shadow-sm hover:shadow-lg transition"
+              className="text-center"
             >
-              <div className="text-5xl mb-4">{step.icon}</div>
-              <h3 className="text-xl font-semibold">{step.title}</h3>
-              <p className="mt-2 text-gray-600 text-sm">{step.description}</p>
+              <div className="bg-emerald-100 w-20 h-20 icon-large rounded-full flex items-center justify-center mx-auto mb-6">{step.icon}</div>
+              <h3 className="text-xl font-bold mb-4">{step.title}</h3>
+              <p className="text-gray-600">{step.description}</p>
             </div>
           ))}
         </div>
+        </div>
+        
       </section>
     );
   }
