@@ -1,21 +1,46 @@
 'use client';
+
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import API from '@/app/utils/api';
+import API from '@/app/utils/api'; 
+import SearchNavbar from '@/app/components/RemedyNavbar';
+import Footer from '@/app/components/Footer';
 
 const fallbackRemedy = {
   title: 'Tulsi Ginger Kadha',
   image: 'https://cdn.medveda.com/images/dummy-kadha.jpg',
   description: 'A traditional Ayurvedic remedy to boost immunity.',
-  ingredients: 'Tulsi leaves, Ginger, Black Pepper, Water, Honey',
-  preparation: 'Boil all ingredients for 10 minutes. Strain and drink warm.',
-  health_benefits: 'Boosts immunity, relieves cold and cough, detoxifies body.',
+  ingredients: `1. Tulsi leaves\n2. Ginger\n3. Black Pepper\n4. Water\n5. Honey`,
+  preparation: `1. Boil all ingredients for 10 minutes\n2. Strain\n3. Add honey\n4. Serve warm`,
+  health_benefits: `• Boosts immunity\n• Relieves cold and cough\n• Detoxifies body\n• Reduces inflammation`,
   rating: 4.5,
 };
 
 const fallbackReviews = [
-  { user: 'Anonymous', comment: 'Helped me recover faster!', rating: 5 },
-  { user: 'Rahul', comment: 'Tastes bitter but really works.', rating: 4 },
+  { 
+    user: 'Priya K.', 
+    comment: 'This kadha saved me during flu season! Tastes strong but works wonders.', 
+    rating: 5,
+    date: '2 weeks ago'
+  },
+  { 
+    user: 'Rahul M.', 
+    comment: 'Effective for sore throat. Reduce ginger if sensitive to spice.', 
+    rating: 4,
+    date: '1 month ago'
+  },
+  { 
+    user: 'Anonymous', 
+    comment: 'My grandmother’s recipe! Modern twist: add lemon for better taste.', 
+    rating: 5,
+    date: '3 days ago'
+  },
+  { 
+    user: 'Neha S.', 
+    comment: 'Helped with my chronic cough. Drinking it daily now.', 
+    rating: 4,
+    date: '2 months ago'
+  },
 ];
 
 export default function RemedyDetailPage() {
@@ -25,80 +50,144 @@ export default function RemedyDetailPage() {
   const [loading, setLoading] = useState(true);
   const [reviews, setReviews] = useState([]);
 
+  // useEffect(() => {
+  //   if (slug) {
+  //     API.get(`/remedies/${slug}/`)
+  //       .then((res) => {
+  //         setRemedy(res.data);
+  //         setReviews(res.data.reviews || []);
+  //       })
+  //       .catch(() => {
+  //         setRemedy(fallbackRemedy);
+  //         setReviews(fallbackReviews);
+  //       })
+  //       .finally(() => setLoading(false));
+  //   }
+  // }, [slug]);
+
+
   useEffect(() => {
     if (slug) {
       API.get(`/remedies/${slug}/`)
         .then((res) => {
           setRemedy(res.data);
-          // (Optional) fetch actual reviews
-          setReviews(res.data.reviews || []);
+          // Use fallback if no reviews exist
+          setReviews(res.data.reviews?.length > 0 ? res.data.reviews : fallbackReviews);
         })
         .catch(() => {
-          setRemedy(fallbackRemedy);
+          
           setReviews(fallbackReviews);
         })
         .finally(() => setLoading(false));
     }
   }, [slug]);
 
-  if (loading) {
-    return (
-      <div className="p-10 max-w-4xl mx-auto">
-        <div className="animate-pulse bg-gray-200 h-64 w-full rounded mb-4"></div>
-        <div className="h-6 bg-gray-300 rounded w-1/2 mb-2"></div>
-        <div className="h-4 bg-gray-200 rounded w-full mb-4"></div>
-        <div className="space-y-2">
-          {[...Array(3)].map((_, i) => (
-            <div key={i} className="h-4 bg-gray-100 rounded w-full"></div>
-          ))}
-        </div>
-      </div>
-    );
+  if (loading || !remedy) {
+    return <div className="p-10 text-center">Loading...</div>;
   }
 
+  const benefits = remedy.health_benefits?.split('•').filter(Boolean);
+
+  // Helper to render star ratings
+  const renderStars = (rating) => {
+    return (
+      <span className="inline-flex items-center">
+        {'⭐'.repeat(Math.floor(rating))}
+        {rating % 1 >= 0.5 && '⭐'}
+        <span className="text-gray-500 ml-2 text-sm">({rating.toFixed(1)})</span>
+      </span>
+    );
+  };
+
   return (
-    <div className="p-6 max-w-4xl mx-auto">
-      <button
-        onClick={() => router.back()}
-        className="mb-6 text-green-700 underline hover:text-green-900"
-      >
-        ← Back to Search
-      </button>
+    <>
+      <SearchNavbar />
 
-      <img src={remedy.image} className="w-full h-64 object-cover rounded mb-6" />
-      <h1 className="text-3xl font-bold text-green-800 mb-2">{remedy.title}</h1>
-      <p className="text-gray-600 mb-4">{remedy.description}</p>
+      <div className="p-6 max-w-4xl mx-auto">
+        {/* 🔙 Back to Search */}
+        <button
+          onClick={() => router.back()}
+          className="text-green-700 underline hover:text-green-900 mb-6"
+        >
+          ← Back to Search
+        </button>
 
-      <section className="mb-6">
-        <h2 className="text-xl font-semibold mb-2 text-green-700">🧂 Ingredients</h2>
-        <p className="whitespace-pre-line">{remedy.ingredients}</p>
-      </section>
+        {/* 📷 Remedy Image */}
+        <img
+          src={remedy.image}
+          className="w-full h-64 object-cover rounded mb-6"
+          alt={remedy.title}
+        />
 
-      <section className="mb-6">
-        <h2 className="text-xl font-semibold mb-2 text-green-700">👨‍🍳 Preparation</h2>
-        <p className="whitespace-pre-line">{remedy.preparation}</p>
-      </section>
+        {/* 🧠 Title + Description */}
+        <h1 className="text-3xl font-bold text-green-800 mb-2">{remedy.title}</h1>
+        
 
-      <section className="mb-6">
-        <h2 className="text-xl font-semibold mb-2 text-green-700">💚 Health Benefits</h2>
-        <p className="whitespace-pre-line">{remedy.health_benefits}</p>
-      </section>
+      
 
-      <section>
-        <h2 className="text-xl font-semibold mb-4 text-green-700">⭐ User Reviews</h2>
-        {reviews.length > 0 ? (
+        {/* ⚙️ Actions */}
+        <div className="flex flex-wrap gap-4 mb-6">
+          <button className="border px-4 py-2 rounded hover:bg-gray-100 transition">
+            🔗 Share
+          </button>
+          <button className="border px-4 py-2 rounded hover:bg-gray-100 transition">
+            💾 Save
+          </button>
+        </div>
+
+        {/* 🧂 Ingredients */}
+        <section className="mb-8">
+          <h2 className="text-xl font-semibold mb-2 text-green-700">🧂 Ingredients</h2>
+          <p className="whitespace-pre-line text-gray-800">{remedy.ingredients}</p>
+        </section>
+
+        {/* 👨‍🍳 Preparation Steps */}
+        <section className="mb-8">
+          <h2 className="text-xl font-semibold mb-2 text-green-700">👨‍🍳 Preparation Steps</h2>
+          <p className="whitespace-pre-line text-gray-800">{remedy.preparation}</p>
+        </section>
+
+        {/* 💚 Health Benefits (4 cards) */}
+        <section className="mb-10">
+          <h2 className="text-xl font-semibold mb-4 text-green-700">💚 Health Benefits</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {benefits?.slice(0, 4).map((benefit, index) => (
+              <div
+                key={index}
+                className="bg-green-50 border border-green-200 p-4 rounded shadow-sm"
+              >
+                <h3 className="font-semibold text-green-800">Benefit {index + 1}</h3>
+                <p className="text-gray-700 mt-1">{benefit.trim()}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* ⭐ User Reviews */}
+        <section className="mb-10">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-xl font-semibold text-green-700">⭐ User Reviews</h2>
+            <button className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition">
+              ✍️ Write a Review
+            </button>
+          </div>
+          
           <ul className="space-y-4">
-            {reviews.map((r, i) => (
-              <li key={i} className="bg-gray-50 p-3 rounded border">
-                <p className="text-sm text-gray-700 italic mb-1">"{r.comment}"</p>
-                <p className="text-sm text-gray-500">– {r.user}, {'⭐'.repeat(r.rating)}</p>
+            {reviews.map((review, index) => (
+              <li key={index} className="bg-gray-50 p-4 rounded border">
+                <div className="flex justify-between">
+                  <h3 className="font-medium">{review.user}</h3>
+                  <span className="text-gray-500 text-sm">{review.date}</span>
+                </div>
+                <div className="my-2">{renderStars(review.rating)}</div>
+                <p className="text-gray-700 italic">"{review.comment}"</p>
               </li>
             ))}
           </ul>
-        ) : (
-          <p className="text-sm text-gray-500">No reviews available.</p>
-        )}
-      </section>
-    </div>
+        </section>
+      </div>
+
+      <Footer />
+    </>
   );
 }
