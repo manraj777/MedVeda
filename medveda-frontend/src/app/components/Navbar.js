@@ -27,6 +27,16 @@ export default function Navbar() {
         <a href="#how-it-works" className="hover:text-green-600 transition">How It Works</a>
         <a href="#testimonials" className="hover:text-green-600 transition">Testimonials</a>
 
+        {isAdmin && (
+          <a
+            href="/admin"
+            className="text-xs bg-yellow-100 border border-yellow-500 text-yellow-700 px-2 py-1 rounded"
+          >
+            🛠 Admin
+          </a>
+        )}
+
+
         {user ? (
           <button
             onClick={handleLogout}

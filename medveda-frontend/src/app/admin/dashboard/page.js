@@ -3,32 +3,30 @@ import { useEffect, useState } from 'react';
 import API from '@/app/utils/api';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
+import { useAuth } from '@/app/components/auth/AuthContext';
 
 export default function AdminDashboard() {
+  const { isAdmin } = useAuth();
   const [remedies, setRemedies] = useState([]);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
+    if (!isAdmin) {
+      toast.error("Access Denied");
+      router.push('/');
+      return;
+    }
+
     API.get('/remedies/admin/pending/', {
       headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
     })
       .then(res => setRemedies(res.data))
-      .catch(() => toast.error("Access denied or failed to load"))
+      .catch(() => toast.error("Failed to load remedies"))
       .finally(() => setLoading(false));
-  }, []);
+  }, [isAdmin, router]);
 
-  const handleApprove = async (id) => {
-    try {
-      await API.post(`/remedies/admin/approve/${id}/`, {}, {
-        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-      });
-      setRemedies(remedies.filter(r => r.id !== id));
-      toast.success('Remedy approved');
-    } catch {
-      toast.error('Approval failed');
-    }
-  };
-
+  if (!isAdmin) return null;
   if (loading) return <div className="p-10">Loading dashboard...</div>;
 
   return (
