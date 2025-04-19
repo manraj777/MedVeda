@@ -167,6 +167,17 @@ def approve_remedy(request, remedy_id):
         return Response({'error': 'Remedy not found'}, status=404)
 
 
+@api_view(['DELETE'])
+@permission_classes([IsAdminUser])
+def delete_remedy(request, remedy_id):
+    try:
+        remedy = Remedy.objects.get(id=remedy_id)
+        remedy.delete()
+        return Response({"status": "deleted"})
+    except Remedy.DoesNotExist:
+        return Response({"error": "Remedy not found"}, status=404)
+
+
 @api_view(['GET'])
 @permission_classes([IsAdminUser])
 def dashboard_stats(request):
