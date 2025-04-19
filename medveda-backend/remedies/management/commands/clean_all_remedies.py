@@ -19,3 +19,5 @@ class Command(BaseCommand):
                 remedy.ai_health_benefits = cleaned.get("benefits")
                 remedy.save()
                 self.stdout.write(f"✔ Cleaned: {remedy.title}")
+            if not cleaned:
+                self.stdout.write(f"⚠️ Skipped (invalid JSON): {remedy.title}")

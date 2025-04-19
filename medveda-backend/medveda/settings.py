@@ -29,6 +29,8 @@ INSTALLED_APPS = [
     'homepage',
     'remedies',
     'ai',
+    'tasks',
+    'services',
 
     # Third-party
     'rest_framework',
