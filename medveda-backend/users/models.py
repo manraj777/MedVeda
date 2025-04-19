@@ -3,5 +3,6 @@ from django.db import models
 
 #extending existing django user model
 class User(AbstractUser):
-    # Extend if needed later (e.g., avatar, bio)
-    pass
+    is_admin = models.BooleanField(default=False)
+    def __str__(self):
+        return self.username

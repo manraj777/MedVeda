@@ -7,6 +7,8 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import logout as django_logout
 from remedies.serializers import RemedyListSerializer
 from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.views import TokenObtainPairView
+from .serializers import CustomTokenSerializer
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
@@ -46,3 +48,10 @@ def my_submissions(request):
     remedies = request.user.submitted_remedies.all()
     serializer = RemedyListSerializer(remedies, many=True)
     return Response(serializer.data)
+
+
+
+
+class CustomTokenObtainPairView(TokenObtainPairView):
+    serializer_class = CustomTokenSerializer
+
