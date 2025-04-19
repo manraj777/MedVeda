@@ -1,6 +1,6 @@
 from rest_framework import generics, permissions
 from rest_framework.decorators import api_view,permission_classes
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
 from django.contrib.postgres.search import SearchVector, SearchQuery
@@ -11,9 +11,11 @@ from .serializers import (
     RemedyDetailSerializer,
     CategorySerializer,
     ReviewSerializer,
+    RemedyAdminSerializer
 
 )
 from .permissions import IsReviewAuthorOrReadOnly
+from django.utils.timezone import now
 
 
 # ——— Search endpoint ————————————————————————————
@@ -140,3 +142,36 @@ def save_remedy(request, remedy_id):
 def unsave_remedy(request, remedy_id):
     SavedRemedy.objects.filter(user=request.user, remedy__id=remedy_id).delete()
     return Response({'status': 'unsaved'})
+
+
+
+
+@api_view(['GET'])
+@permission_classes([IsAdminUser])
+def pending_remedies(request):
+    remedies = Remedy.objects.filter(is_approved=False)
+    serializer = RemedyAdminSerializer(remedies, many=True)
+    return Response(serializer.data)
+
+@api_view(['POST'])
+@permission_classes([IsAdminUser])
+def approve_remedy(request, remedy_id):
+    try:
+        remedy = Remedy.objects.get(id=remedy_id)
+        remedy.is_approved = True
+        remedy.approved_by = request.user
+        remedy.approved_at = now()
+        remedy.save()
+        return Response({'status': 'approved'})
+    except Remedy.DoesNotExist:
+        return Response({'error': 'Remedy not found'}, status=404)
+
+
+@api_view(['GET'])
+@permission_classes([IsAdminUser])
+def dashboard_stats(request):
+    return Response({
+        "total_remedies": Remedy.objects.count(),
+        "pending": Remedy.objects.filter(is_approved=False).count(),
+        "approved": Remedy.objects.filter(is_approved=True).count()
+    })

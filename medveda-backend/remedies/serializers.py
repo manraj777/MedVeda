@@ -71,3 +71,17 @@ class SavedRemedySerializer(serializers.ModelSerializer):
     class Meta:
         model = SavedRemedy
         fields = ['id', 'user', 'remedy', 'created_at']
+
+
+# remedies/serializers.py
+class RemedyAdminSerializer(serializers.ModelSerializer):
+    created_by = serializers.StringRelatedField()
+    category = CategorySerializer()
+
+    class Meta:
+        model = Remedy
+        fields = [
+            'id', 'title', 'slug', 'category', 'is_approved',
+            'created_by', 'created_at'
+        ]
+    

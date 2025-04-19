@@ -22,6 +22,8 @@ class Remedy(models.Model):
     rating = models.FloatField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     is_approved = models.BooleanField(default=True)  # default=True for now
+    approved_by = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL, related_name='approved_remedies')
+    approved_at = models.DateTimeField(null=True, blank=True)
 
 
     def save(self, *args, **kwargs):
