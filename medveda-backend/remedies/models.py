@@ -26,6 +26,15 @@ class Remedy(models.Model):
     approved_at = models.DateTimeField(null=True, blank=True)
 
 
+    # AI-enhanced suggestion fields
+    ai_title = models.CharField(max_length=200, blank=True, null=True)
+    ai_description = models.TextField(blank=True, null=True)
+    ai_ingredients = models.TextField(blank=True, null=True)
+    ai_preparation = models.TextField(blank=True, null=True)
+    ai_health_benefits = models.TextField(blank=True, null=True)
+
+    ai_accepted = models.BooleanField(default=False)
+
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.title)
