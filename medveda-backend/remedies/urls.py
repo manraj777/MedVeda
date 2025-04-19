@@ -11,11 +11,10 @@ urlpatterns = [
     path('search/', search_remedies, name='search-remedies'),
     path('categories/', category_list),
      path('<slug:slug>/', RemedyDetailView.as_view(), name='remedy-detail'),
-     path('<slug:slug>/reviews/', create_review, name='create-review'),#same
+     path('<slug:slug>/reviews/', create_review, name='create-review'),
      path('reviews/<int:pk>/', ReviewUpdateDeleteView.as_view(), name='review-update-delete'),
-path('<slug:slug>/reviews/', RemedyReviewsView.as_view(), name='remedy-reviews'),#same
-path('saved/', get_saved_remedies),#user
-path('submit/', submit_remedy),#user
+path('<slug:slug>/reviews/', RemedyReviewsView.as_view(), name='remedy-reviews'),
+path('saved/', get_saved_remedies),
 path('saved/<int:remedy_id>/', save_remedy, name='save-remedy'),
 path('saved/<int:remedy_id>/', unsave_remedy, name='unsave-remedy'),
 

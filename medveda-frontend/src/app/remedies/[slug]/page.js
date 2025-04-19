@@ -50,7 +50,7 @@ export default function RemedyDetailPage() {
     setSubmitting(true);
     try {
       const res = await API.post(
-        `/remedies/${slug}/reviews/`,
+        `/remedies/${slug}/review/`,
         newReview,
         {
           headers: {
