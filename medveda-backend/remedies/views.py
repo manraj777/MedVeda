@@ -14,7 +14,7 @@ from .serializers import (
     RemedyAdminSerializer
 
 )
-from .permissions import IsReviewAuthorOrReadOnly
+from .permissions import IsReviewAuthorOrReadOnly, IsAdminOrReadOnly
 from django.utils.timezone import now
 
 
@@ -147,14 +147,14 @@ def unsave_remedy(request, remedy_id):
 
 
 @api_view(['GET'])
-@permission_classes([IsAdminUser])
+@permission_classes([IsAdminOrReadOnly])
 def pending_remedies(request):
     remedies = Remedy.objects.filter(is_approved=False)
     serializer = RemedyAdminSerializer(remedies, many=True)
     return Response(serializer.data)
 
 @api_view(['POST'])
-@permission_classes([IsAdminUser])
+@permission_classes([IsAdminOrReadOnly])
 def approve_remedy(request, remedy_id):
     try:
         remedy = Remedy.objects.get(id=remedy_id)
@@ -168,7 +168,7 @@ def approve_remedy(request, remedy_id):
 
 
 @api_view(['DELETE'])
-@permission_classes([IsAdminUser])
+@permission_classes([IsAdminOrReadOnly])
 def delete_remedy(request, remedy_id):
     try:
         remedy = Remedy.objects.get(id=remedy_id)
@@ -179,7 +179,7 @@ def delete_remedy(request, remedy_id):
 
 
 @api_view(['GET'])
-@permission_classes([IsAdminUser])
+@permission_classes([IsAdminOrReadOnly])
 def dashboard_stats(request):
     return Response({
         "total_remedies": Remedy.objects.count(),
