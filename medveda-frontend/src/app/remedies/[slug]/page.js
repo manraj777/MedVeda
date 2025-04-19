@@ -4,8 +4,9 @@ import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import API from '@/app/utils/api';
-import SearchNavbar from '@/app/components/RemedyNavbar';
+import SearchNavbar from '@/app/components/SearchNavbar';
 import Footer from '@/app/components/Footer';
+// import { useAuth } from '@/app/components/auth/AuthContext';
 
 export default function RemedyDetailPage() {
   const { slug } = useParams();
