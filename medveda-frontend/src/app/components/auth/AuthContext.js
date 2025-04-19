@@ -10,35 +10,42 @@ export const parseToken = (token) => {
   try {
     const decoded = jwtDecode(token);
     return {
-      user: decoded.username || null,
+      username: decoded.username || null,
+      email: decoded.email || null,
       isAdmin: decoded.is_admin || false,
     };
   } catch (err) {
-    return { user: null, isAdmin: false };
+    return { username: null, email: null, isAdmin: false };
   }
 };
 
-export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);     // user object or null
-  const [isAdmin, setIsAdmin] = useState(false); // separate admin flag
 
-  useEffect(() => {
+export const AuthProvider = ({ children }) => {
+  const [user, setUser] = useState(null);
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  const refreshAuth = () => {
     const token = getToken();
     if (token) {
-      const { user, isAdmin } = parseToken(token);
-      setUser(user);
+      const { username, email, isAdmin } = parseToken(token);
+      setUser({ username, email });  // ✅ Now user is an object
       setIsAdmin(isAdmin);
     } else {
       setUser(null);
       setIsAdmin(false);
     }
-  }, []);
+  };
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      refreshAuth(); // on mount
+    }
+  }, []); // empty array = only runs once on mount
 
   const login = (userData, token) => {
     storeToken(token);
-    const parsed = parseToken(token);
-    setUser(parsed.user);
-    setIsAdmin(parsed.isAdmin);
+    setUser({ username: userData.username, email: userData.email });
+    setIsAdmin(userData.isAdmin || false);
   };
 
   const logout = () => {
@@ -53,5 +60,6 @@ export const AuthProvider = ({ children }) => {
     </AuthContext.Provider>
   );
 };
+
 
 export const useAuth = () => useContext(AuthContext);
