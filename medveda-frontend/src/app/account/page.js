@@ -81,26 +81,16 @@ export default function AccountPage() {
     }
   };
 
-  const handleSubmit = async () => {
-    try {
-      const res = await API.post('/remedies/submit/', form);
-      alert("✅ Remedy submitted for review!");
-      setShowForm(false);
-    } catch (err) {
-      alert("❌ Failed to submit remedy.");
-    }
-  };
-
   return (
     <div className="p-6 max-w-4xl mx-auto">
       <h1 className="text-3xl font-bold mb-6">👤 My Account</h1>
 
       <button
-          onClick={() => router.back()}
-          className="text-green-700 underline hover:text-green-900 mb-6"
-        >
-          ← Back to Search
-        </button>
+        onClick={() => router.back()}
+        className="text-green-700 underline hover:text-green-900 mb-6"
+      >
+        ← Back to Search
+      </button>
 
       <section className="mb-10">
         <div className="flex justify-between items-center mb-4">
@@ -125,7 +115,7 @@ export default function AccountPage() {
             className="text-green-600 underline"
             onClick={() => {
               setShowForm(!showForm);
-              setPreview(null); // Reset preview when toggling form
+              setPreview(null);
             }}
           >
             {showForm ? 'Cancel' : 'Submit Remedy'}
@@ -134,11 +124,80 @@ export default function AccountPage() {
 
         {showForm && (
           <div className="space-y-4 bg-gray-50 border p-4 rounded">
-            {preview ? (
+            <input
+              name="title"
+              value={form.title}
+              onChange={handleChange}
+              className="w-full border px-3 py-2 rounded"
+              placeholder="Title"
+            />
+            <textarea
+              name="description"
+              value={form.description}
+              onChange={handleChange}
+              rows={2}
+              className="w-full border px-3 py-2 rounded"
+              placeholder="Short Description"
+            />
+            <textarea
+              name="ingredients"
+              value={form.ingredients}
+              onChange={handleChange}
+              rows={3}
+              className="w-full border px-3 py-2 rounded"
+              placeholder="Ingredients (one per line)"
+            />
+            <textarea
+              name="preparation"
+              value={form.preparation}
+              onChange={handleChange}
+              rows={3}
+              className="w-full border px-3 py-2 rounded"
+              placeholder="Preparation Steps"
+            />
+            <textarea
+              name="health_benefits"
+              value={form.health_benefits}
+              onChange={handleChange}
+              rows={3}
+              className="w-full border px-3 py-2 rounded"
+              placeholder="Health Benefits"
+            />
+            <input
+              name="image"
+              value={form.image}
+              onChange={handleChange}
+              className="w-full border px-3 py-2 rounded"
+              placeholder="Image URL"
+            />
+            <input
+              name="category"
+              value={form.category}
+              onChange={handleChange}
+              className="w-full border px-3 py-2 rounded"
+              placeholder="Category"
+            />
+
+            {!preview ? (
+              <button
+                onClick={handlePreview}
+                disabled={loadingPreview}
+                className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition disabled:bg-blue-400"
+              >
+                {loadingPreview ? 'Generating Preview...' : '✨ Preview Cleaned Remedy'}
+              </button>
+            ) : (
               <>
-                <div className="border p-4 rounded bg-white">
-                  <h3 className="font-bold mb-2">Preview:</h3>
-                  <RemedyCard remedy={preview} />
+                <div className="bg-white border rounded p-4 mt-6 space-y-2">
+                  <h3 className="text-lg font-semibold text-green-700">🔍 Cleaned Preview</h3>
+                  <p><strong>Title:</strong> {preview.title}</p>
+                  <p><strong>Description:</strong> {preview.description}</p>
+                  <p><strong>Ingredients:</strong> <pre className="whitespace-pre-wrap">{preview.ingredients}</pre></p>
+                  <p><strong>Preparation:</strong> <pre className="whitespace-pre-wrap">{preview.preparation}</pre></p>
+                  <p><strong>Benefits:</strong> <pre className="whitespace-pre-wrap">{preview.health_benefits}</pre></p>
+                  <p className="text-sm italic text-gray-500">
+                    AI Cleaned: {preview.ai_cleaned ? "✅ Yes" : "❌ No"}
+                  </p>
                 </div>
                 <div className="flex gap-2">
                   <button
@@ -152,79 +211,7 @@ export default function AccountPage() {
                     disabled={finalSubmitting}
                     className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition disabled:bg-green-400"
                   >
-                    {finalSubmitting ? 'Submitting...' : 'Submit Final Remedy'}
-                  </button>
-                </div>
-              </>
-            ) : (
-              <>
-                <input
-                  name="title"
-                  value={form.title}
-                  onChange={handleChange}
-                  className="w-full border px-3 py-2 rounded"
-                  placeholder="Title"
-                />
-                <textarea
-                  name="description"
-                  value={form.description}
-                  onChange={handleChange}
-                  rows={2}
-                  className="w-full border px-3 py-2 rounded"
-                  placeholder="Short Description"
-                />
-                <textarea
-                  name="ingredients"
-                  value={form.ingredients}
-                  onChange={handleChange}
-                  rows={3}
-                  className="w-full border px-3 py-2 rounded"
-                  placeholder="Ingredients (one per line)"
-                />
-                <textarea
-                  name="preparation"
-                  value={form.preparation}
-                  onChange={handleChange}
-                  rows={3}
-                  className="w-full border px-3 py-2 rounded"
-                  placeholder="Preparation Steps"
-                />
-                <textarea
-                  name="health_benefits"
-                  value={form.health_benefits}
-                  onChange={handleChange}
-                  rows={3}
-                  className="w-full border px-3 py-2 rounded"
-                  placeholder="Health Benefits"
-                />
-                <input
-                  name="image"
-                  value={form.image}
-                  onChange={handleChange}
-                  className="w-full border px-3 py-2 rounded"
-                  placeholder="Image URL"
-                />
-                <input
-                  name="category"
-                  value={form.category}
-                  onChange={handleChange}
-                  className="w-full border px-3 py-2 rounded"
-                  placeholder="Category"
-                />
-
-                <div className="flex gap-2">
-                  <button
-                    onClick={handlePreview}
-                    disabled={loadingPreview}
-                    className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition disabled:bg-blue-400"
-                  >
-                    {loadingPreview ? 'Generating Preview...' : 'Preview Remedy'}
-                  </button>
-                  <button
-                    onClick={handleSubmit}
-                    className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition"
-                  >
-                    Submit Remedy
+                    {finalSubmitting ? "Submitting..." : "✅ Submit Final Remedy"}
                   </button>
                 </div>
               </>
@@ -232,6 +219,7 @@ export default function AccountPage() {
           </div>
         )}
       </section>
+
       <h2 className="text-xl font-semibold mt-10 mb-2">📝 My Submissions</h2>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {submissions.map(remedy => <RemedyCard key={remedy.id} remedy={remedy} />)}
