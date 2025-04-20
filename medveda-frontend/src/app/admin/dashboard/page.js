@@ -64,7 +64,6 @@ export default function AdminDashboard() {
       toast.error('Failed to delete remedy');
     }
   };
-  
 
   if (!isAdmin) return null;
   if (loading) return <div className="p-10">Loading dashboard...</div>;
@@ -97,10 +96,18 @@ export default function AdminDashboard() {
           ) : (
             <div className="space-y-4">
               {pendingRemedies.map(remedy => (
-                <div key={remedy.id} className="bg-white p-4 border rounded shadow-sm">
+                <div
+                  key={remedy.id}
+                  className={`bg-white p-4 border rounded shadow-sm ${
+                    remedy.ai_cleaned ? 'border-green-300 bg-green-50' : ''
+                  }`}
+                >
                   <h2 className="text-xl font-semibold text-green-800">{remedy.title}</h2>
                   <p className="text-sm text-gray-500">
                     By {remedy.created_by} | Category: {remedy.category.name}
+                  </p>
+                  <p className="text-xs text-gray-500 mt-1">
+                    AI Cleaned: {remedy.ai_cleaned ? "✅" : "❌"}
                   </p>
                   <div className="mt-2">
                     <button
@@ -125,17 +132,25 @@ export default function AdminDashboard() {
           ) : (
             <div className="space-y-4">
               {approvedRemedies.map(remedy => (
-                <div key={remedy.id} className="bg-white p-4 border rounded shadow-sm">
+                <div
+                  key={remedy.id}
+                  className={`bg-white p-4 border rounded shadow-sm ${
+                    remedy.ai_cleaned ? 'border-green-300 bg-green-50' : ''
+                  }`}
+                >
                   <h2 className="text-xl font-semibold text-green-800">{remedy.title}</h2>
                   <p className="text-sm text-gray-500">
                     By {remedy.created_by} | Category: {remedy.category.name}
                   </p>
+                  <p className="text-xs text-gray-500 mt-1">
+                    AI Cleaned: {remedy.ai_cleaned ? "✅" : "❌"}
+                  </p>
                   <div className="mt-2">
-                  <button
-                    onClick={() => handleDelete(remedy.id, remedy.title)}
-                    className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition"
+                    <button
+                      onClick={() => handleDelete(remedy.id, remedy.title)}
+                      className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition"
                     >
-                    🗑 Delete
+                      🗑 Delete
                     </button>
                   </div>
                 </div>

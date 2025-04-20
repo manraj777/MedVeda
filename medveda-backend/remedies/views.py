@@ -19,6 +19,7 @@ from django.utils.timezone import now
 from django.utils.text import slugify
 from services import ai_remedy_cleaner
 
+
 # ——— Search endpoint ————————————————————————————
 @api_view(['GET'])
 def search_remedies(request):
@@ -119,7 +120,7 @@ def get_saved_remedies(request):
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
-def submit_remedy(request):
+def submit_remedy_raw(request):
     data = request.data.copy()
     data['created_by'] = request.user.id
     data['is_approved'] = False  # mark as pending
@@ -280,3 +281,12 @@ def preview_cleaned_remedy(request):
         "preparation": "\n".join(cleaned.get("preparation", [])),
         "health_benefits": "\n".join(cleaned.get("benefits", [])),
     }, status=200)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def my_submissions(request):
+    remedies = request.user.submitted_remedies.all()
+    serializer = RemedyListSerializer(remedies, many=True)
+    return Response(serializer.data)
+

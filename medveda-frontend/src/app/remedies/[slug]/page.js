@@ -51,7 +51,7 @@ export default function RemedyDetailPage() {
     setSubmitting(true);
     try {
       const res = await API.post(
-        `/remedies/${slug}/review/`,
+        `/remedies/${slug}/add-review/`,
         newReview,
         {
           headers: {
@@ -122,11 +122,11 @@ export default function RemedyDetailPage() {
     if (!isLoggedIn) return toast.error("Login to save remedies");
     try {
       if (remedy.is_saved) {
-        await API.delete(`/users/saved/${remedy.id}/`);
+        await API.delete(`/remedies/saved/${remedy.id}/`);
         setRemedy({ ...remedy, is_saved: false });
         toast.success('Removed from saved');
       } else {
-        await API.post(`/users/saved/${remedy.id}/`);
+        await API.post(`/remedies/saved/${remedy.id}/`);
         setRemedy({ ...remedy, is_saved: true });
         toast.success('Saved!');
       }

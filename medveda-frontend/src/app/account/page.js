@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import API from '@/app/utils/api';
 import RemedyCard from '@/app/components/RemedyCard';
+import toast from 'react-hot-toast';
 
 export default function AccountPage() {
   const router = useRouter();
@@ -24,13 +25,23 @@ export default function AccountPage() {
   const [finalSubmitting, setFinalSubmitting] = useState(false);
 
   useEffect(() => {
-    API.get('/users/saved/')
+    API.get('/users/saved-remedies/', {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      }
+    })
       .then(res => setSaved(res.data))
       .catch(() => console.warn("Failed to fetch saved remedies"));
-    API.get('/remedies/my-submissions/')
+  
+    API.get('/remedies/my-submissions/', {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      }
+    })
       .then(res => setSubmissions(res.data))
       .catch(() => {});
   }, []);
+  
 
   const handleChange = e => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -81,6 +92,29 @@ export default function AccountPage() {
     }
   };
 
+  const handleSubmitRaw = async () => {
+    try {
+      const res = await API.post('/remedies/submit-raw/', form, {
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+      });
+      toast.success("✅ Remedy submitted without preview");
+      setShowForm(false);
+      setForm({
+        title: '',
+        ingredients: '',
+        preparation: '',
+        health_benefits: '',
+        description: '',
+        image: '',
+        category: '',
+      });
+      setPreview(null);
+    } catch (err) {
+      toast.error("❌ Submission failed.");
+    }
+  };
+  
+
   return (
     <div className="p-6 max-w-4xl mx-auto">
       <h1 className="text-3xl font-bold mb-6">👤 My Account</h1>
@@ -123,101 +157,75 @@ export default function AccountPage() {
         </div>
 
         {showForm && (
-          <div className="space-y-4 bg-gray-50 border p-4 rounded">
-            <input
-              name="title"
-              value={form.title}
-              onChange={handleChange}
-              className="w-full border px-3 py-2 rounded"
-              placeholder="Title"
-            />
-            <textarea
-              name="description"
-              value={form.description}
-              onChange={handleChange}
-              rows={2}
-              className="w-full border px-3 py-2 rounded"
-              placeholder="Short Description"
-            />
-            <textarea
-              name="ingredients"
-              value={form.ingredients}
-              onChange={handleChange}
-              rows={3}
-              className="w-full border px-3 py-2 rounded"
-              placeholder="Ingredients (one per line)"
-            />
-            <textarea
-              name="preparation"
-              value={form.preparation}
-              onChange={handleChange}
-              rows={3}
-              className="w-full border px-3 py-2 rounded"
-              placeholder="Preparation Steps"
-            />
-            <textarea
-              name="health_benefits"
-              value={form.health_benefits}
-              onChange={handleChange}
-              rows={3}
-              className="w-full border px-3 py-2 rounded"
-              placeholder="Health Benefits"
-            />
-            <input
-              name="image"
-              value={form.image}
-              onChange={handleChange}
-              className="w-full border px-3 py-2 rounded"
-              placeholder="Image URL"
-            />
-            <input
-              name="category"
-              value={form.category}
-              onChange={handleChange}
-              className="w-full border px-3 py-2 rounded"
-              placeholder="Category"
-            />
+  <div className="space-y-4 bg-gray-50 border p-4 rounded">
+    {/* Inputs */}
+    {['title', 'description', 'ingredients', 'preparation', 'health_benefits', 'image', 'category'].map(field => (
+      field !== 'health_benefits' ? (
+        <input
+          key={field}
+          name={field}
+          value={form[field]}
+          onChange={handleChange}
+          className="w-full border px-3 py-2 rounded"
+          placeholder={field.replace('_', ' ').toUpperCase()}
+        />
+      ) : (
+        <textarea
+          key={field}
+          name={field}
+          value={form[field]}
+          onChange={handleChange}
+          rows={3}
+          className="w-full border px-3 py-2 rounded"
+          placeholder="Health Benefits"
+        />
+      )
+    ))}
 
-            {!preview ? (
-              <button
-                onClick={handlePreview}
-                disabled={loadingPreview}
-                className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition disabled:bg-blue-400"
-              >
-                {loadingPreview ? 'Generating Preview...' : '✨ Preview Cleaned Remedy'}
-              </button>
-            ) : (
-              <>
-                <div className="bg-white border rounded p-4 mt-6 space-y-2">
-                  <h3 className="text-lg font-semibold text-green-700">🔍 Cleaned Preview</h3>
-                  <p><strong>Title:</strong> {preview.title}</p>
-                  <p><strong>Description:</strong> {preview.description}</p>
-                  <p><strong>Ingredients:</strong> <pre className="whitespace-pre-wrap">{preview.ingredients}</pre></p>
-                  <p><strong>Preparation:</strong> <pre className="whitespace-pre-wrap">{preview.preparation}</pre></p>
-                  <p><strong>Benefits:</strong> <pre className="whitespace-pre-wrap">{preview.health_benefits}</pre></p>
-                  <p className="text-sm italic text-gray-500">
-                    AI Cleaned: {preview.ai_cleaned ? "✅ Yes" : "❌ No"}
-                  </p>
-                </div>
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => setPreview(null)}
-                    className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition"
-                  >
-                    Back to Edit
-                  </button>
-                  <button
-                    onClick={handleFinalSubmit}
-                    disabled={finalSubmitting}
-                    className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition disabled:bg-green-400"
-                  >
-                    {finalSubmitting ? "Submitting..." : "✅ Submit Final Remedy"}
-                  </button>
-                </div>
-              </>
-            )}
-          </div>
-        )}
+    {/* Buttons */}
+    <div className="flex flex-wrap gap-4 mt-4">
+      <button
+        onClick={handlePreview}
+        disabled={loadingPreview}
+        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+      >
+        {loadingPreview ? "Loading Preview..." : "✨ Preview Cleaned"}
+      </button>
+
+      <button
+        onClick={() => {
+          // Submit raw data directly without preview
+          handleSubmitRaw();
+        }}
+        className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 transition"
+      >
+        🚀 Submit Without Preview
+      </button>
+    </div>
+
+    {/* Show AI Preview if available */}
+    {preview && (
+      <div className="bg-white border rounded p-4 mt-6 space-y-2">
+        <h3 className="text-lg font-semibold text-green-700">🔍 Cleaned Preview</h3>
+        <p><strong>Title:</strong> {preview.title}</p>
+        <p><strong>Description:</strong> {preview.description}</p>
+        <p><strong>Ingredients:</strong> <pre className="whitespace-pre-wrap">{preview.ingredients}</pre></p>
+        <p><strong>Preparation:</strong> <pre className="whitespace-pre-wrap">{preview.preparation}</pre></p>
+        <p><strong>Benefits:</strong> <pre className="whitespace-pre-wrap">{preview.health_benefits}</pre></p>
+        <p className="text-sm italic text-gray-500">AI Cleaned: {preview.ai_cleaned ? "✅ Yes" : "❌ No"}</p>
+        <button
+          onClick={handleFinalSubmit}
+          disabled={finalSubmitting}
+          className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 mt-4"
+        >
+          {finalSubmitting ? "Submitting..." : "✅ Submit Cleaned"}
+        </button>
+      </div>
+    )}
+  </div>
+)}
+
+        
       </section>
 
       <h2 className="text-xl font-semibold mt-10 mb-2">📝 My Submissions</h2>

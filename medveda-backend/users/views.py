@@ -42,13 +42,6 @@ def logout(request):
     return response
 
 
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def my_submissions(request):
-    remedies = request.user.submitted_remedies.all()
-    serializer = RemedyListSerializer(remedies, many=True)
-    return Response(serializer.data)
-
 
 
 
