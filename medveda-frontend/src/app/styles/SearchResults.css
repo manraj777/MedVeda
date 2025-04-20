@@ -1,0 +1,14 @@
+.flex-1 {
+    flex: 1 1 0%;
+}
+gap-6 {
+    gap: 1.5rem;
+}
+.grid-cols-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.grid {
+    display: grid;
+}
+
+

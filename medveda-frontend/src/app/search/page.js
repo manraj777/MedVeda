@@ -39,25 +39,25 @@ export default function SearchPage() {
   const fallbackRemedies = [
     {
       id: 1,
-      title: 'Tulsi Tea',
-      description: 'Great for boosting immunity and relieving cold symptoms.',
-      image_url: 'https://source.unsplash.com/featured/?herbal,tea',
+      title: 'Triphala Churna',
+      description: 'Traditional digestive aid made from three fruits. Helps with digestion and detoxification.',
+      image_url: 'https://storage.googleapis.com/uxpilot-auth.appspot.com/0461b06c78-28d93f7d631561f5f09e.png',
       rating: 4.5,
       category: 'Immunity',
     },
     {
       id: 2,
-      title: 'Ginger Honey Mix',
-      description: 'Soothes sore throat and helps with digestion.',
-      image_url: 'https://source.unsplash.com/featured/?ginger,honey',
+      title: 'Ashwagandha Root',
+      description: 'Adaptogenic herb that helps reduce stress and anxiety while boosting energy levels.',
+      image_url: '	https://storage.googleapis.com/uxpilot-auth.appspot.com/c0f597dfdb-0c3f600dff6d3622a011.png',
       rating: 4.2,
       category: 'Digestive',
     },
     {
       id: 3,
-      title: 'Aloe Vera Gel',
-      description: 'Heals minor skin burns and reduces inflammation.',
-      image_url: 'https://source.unsplash.com/featured/?aloe,skin',
+      title: 'Golden Milk Mix',
+      description: 'Turmeric-based blend with black pepper and cardamom. Anti-inflammatory properties.',
+      image_url: 'https://storage.googleapis.com/uxpilot-auth.appspot.com/e438cf9a2a-2f4e83b82946233e9718.png',
       rating: 4.7,
       category: 'Skin Care',
     },
@@ -122,7 +122,7 @@ export default function SearchPage() {
 
     <SearchNavbar />
     <div className="p-6">
-      <SearchHeader query={q} />
+      <div className='flex gap-8'>
       <SearchFilters
         filters={filters}
         categories={categories}
@@ -131,15 +131,19 @@ export default function SearchPage() {
       {loading ? (
         <SkeletonGrid />
       ) : (
-        <>
+        <>  <div className='flex-1'>
+             
+          <SearchHeader query={q} />
           <SearchResults results={results} />
           <PaginationControls
             page={page}
             setPage={setPage}
             hasNextPage={hasNextPage}
           />
+          </div> 
         </>
       )}
+      </div>
     </div>
     </>
   );

@@ -1,22 +1,27 @@
+import '../../styles/AuthLayout.css'; 
 export default function AuthLayout({ children }) {
     return (
-      <div className="min-h-screen grid md:grid-cols-2">
+      <div className="min-h-screen flex">
         {/* Left: Branding / Illustration */}
-        <div className="bg-green-100 flex flex-col justify-center items-center px-8 py-12">
-          <h1 className="text-4xl font-bold text-green-700 mb-4">Welcome to MedVeda</h1>
-          <p className="text-gray-700 text-center">
+        <div className="hidden lg:flex lg:w-1/2 relative">
+          
+          <img
+            src="https://storage.googleapis.com/uxpilot-auth.appspot.com/29ef141a9d-5e8c77c987c2515d2f43.png"
+            alt="Ayurvedic Illustration"
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-green-900/30"></div>
+          <div className='relative z-10 p-12 text-white'>
+            <h1 className="text-4xl font-bold mb-4">Welcome to MedVeda</h1>
+          <p className="text-lg opacity-90">
             Discover, learn and contribute ayurvedic & home remedies
           </p>
-          <img
-            src="/auth-illustration.svg"
-            alt="Ayurvedic Illustration"
-            className="mt-10 w-3/4 max-w-md"
-          />
+          </div>
         </div>
   
         {/* Right: Auth Form */}
-        <div className="flex items-center justify-center px-6 py-16">
-          <div className="w-full max-w-md">
+        <div className="w-full lg:w-1/2 flex items-center justify-center bg-[#FAF7F2]">
+          <div className="w-full max-w-md px-8 py-12">
             {children}
           </div>
         </div>

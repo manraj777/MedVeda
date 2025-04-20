@@ -41,6 +41,7 @@ h2{
 }
 .gap-12 {
     gap: 3rem;
+    padding: 2rem;
 }
 .grid {
     display: grid;
