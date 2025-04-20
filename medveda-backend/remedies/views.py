@@ -16,7 +16,8 @@ from .serializers import (
 )
 from .permissions import IsReviewAuthorOrReadOnly, IsAdminOrReadOnly
 from django.utils.timezone import now
-
+from django.utils.text import slugify
+from services import ai_remedy_cleaner
 
 # ——— Search endpoint ————————————————————————————
 @api_view(['GET'])
@@ -186,3 +187,96 @@ def dashboard_stats(request):
         "pending": Remedy.objects.filter(is_approved=False).count(),
         "approved": Remedy.objects.filter(is_approved=True).count()
     })
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def submit_remedy(request):
+    user_input = {
+        "title": request.data.get("title", ""),
+        "description": request.data.get("description", ""),
+        "ingredients": request.data.get("ingredients", ""),
+        "preparation": request.data.get("preparation", ""),
+        "benefits": request.data.get("health_benefits", ""),
+    }
+
+    # 🧠 Construct raw prompt from structured fields
+    raw_combined = f"""
+    Title: {user_input['title']}
+    Description: {user_input['description']}
+    Ingredients: {user_input['ingredients']}
+    Preparation: {user_input['preparation']}
+    Health Benefits: {user_input['benefits']}
+    """
+
+    # ✨ Clean using Gemini
+    cleaned = ai_remedy_cleaner(raw_combined)
+
+    if not cleaned or not cleaned.get("title"):
+        return Response({'error': 'AI cleaning failed or returned incomplete result.'}, status=500)
+
+    from .models import Category  # in case needed inline
+    category_name = request.data.get("category", "General Wellness").strip()
+    category, _ = Category.objects.get_or_create(name=category_name)
+
+    remedy_data = {
+        "title": cleaned["title"],
+        "slug": slugify(cleaned["title"])[:200],
+        "description": cleaned.get("description", "A natural home remedy."),
+        "ingredients": "\n".join(cleaned.get("ingredients", [])),
+        "preparation": "\n".join(cleaned.get("preparation", [])),
+        "health_benefits": "\n".join(cleaned.get("benefits", [])),
+        "image": request.data.get("image", ""),  # Safe fallback
+        "category": category.id,
+        "created_by": request.user.id,
+        "is_approved": False,
+        "ai_cleaned": True,
+    }
+
+    serializer = RemedyDetailSerializer(data=remedy_data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response({'message': '✅ Remedy cleaned and submitted successfully!'}, status=201)
+    return Response(serializer.errors, status=400)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def preview_cleaned_remedy(request):
+    user_input = {
+        "title": request.data.get("title", ""),
+        "description": request.data.get("description", ""),
+        "ingredients": request.data.get("ingredients", ""),
+        "preparation": request.data.get("preparation", ""),
+        "benefits": request.data.get("health_benefits", ""),
+    }
+
+    raw_combined = f"""
+    Title: {user_input['title']}
+    Description: {user_input['description']}
+    Ingredients: {user_input['ingredients']}
+    Preparation: {user_input['preparation']}
+    Health Benefits: {user_input['benefits']}
+    """
+
+    cleaned = ai_remedy_cleaner(raw_combined)
+
+    if not cleaned or not cleaned.get("title"):
+        # fallback to user input
+        return Response({
+            "ai_cleaned": False,
+            "title": user_input['title'],
+            "description": user_input['description'],
+            "ingredients": user_input['ingredients'],
+            "preparation": user_input['preparation'],
+            "health_benefits": user_input['benefits'],
+        }, status=200)
+
+    return Response({
+        "ai_cleaned": True,
+        "title": cleaned["title"],
+        "description": cleaned.get("description"),
+        "ingredients": "\n".join(cleaned.get("ingredients", [])),
+        "preparation": "\n".join(cleaned.get("preparation", [])),
+        "health_benefits": "\n".join(cleaned.get("benefits", [])),
+    }, status=200)

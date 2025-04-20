@@ -19,6 +19,9 @@ export default function AccountPage() {
     image: '',
     category: '',
   });
+  const [preview, setPreview] = useState(null);
+  const [loadingPreview, setLoadingPreview] = useState(false);
+  const [finalSubmitting, setFinalSubmitting] = useState(false);
 
   useEffect(() => {
     API.get('/users/saved/')
@@ -31,6 +34,51 @@ export default function AccountPage() {
 
   const handleChange = e => {
     setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  // 👀 Preview cleaned remedy
+  const handlePreview = async () => {
+    setLoadingPreview(true);
+    try {
+      const res = await API.post('/remedies/preview-cleaned/', form, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
+      setPreview(res.data);
+    } catch (err) {
+      alert("❌ Failed to generate preview.");
+    } finally {
+      setLoadingPreview(false);
+    }
+  };
+
+  // ✅ Submit final remedy
+  const handleFinalSubmit = async () => {
+    setFinalSubmitting(true);
+    try {
+      await API.post('/remedies/submit/', preview, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
+      alert("✅ Remedy submitted for review!");
+      setPreview(null);
+      setForm({
+        title: '',
+        ingredients: '',
+        preparation: '',
+        health_benefits: '',
+        description: '',
+        image: '',
+        category: '',
+      });
+      setShowForm(false);
+    } catch {
+      alert("❌ Submission failed.");
+    } finally {
+      setFinalSubmitting(false);
+    }
   };
 
   const handleSubmit = async () => {
@@ -75,7 +123,10 @@ export default function AccountPage() {
           <h2 className="text-xl font-semibold">📤 Submit a Remedy</h2>
           <button
             className="text-green-600 underline"
-            onClick={() => setShowForm(!showForm)}
+            onClick={() => {
+              setShowForm(!showForm);
+              setPreview(null); // Reset preview when toggling form
+            }}
           >
             {showForm ? 'Cancel' : 'Submit Remedy'}
           </button>
@@ -83,66 +134,101 @@ export default function AccountPage() {
 
         {showForm && (
           <div className="space-y-4 bg-gray-50 border p-4 rounded">
-            <input
-              name="title"
-              value={form.title}
-              onChange={handleChange}
-              className="w-full border px-3 py-2 rounded"
-              placeholder="Title"
-            />
-            <textarea
-              name="description"
-              value={form.description}
-              onChange={handleChange}
-              rows={2}
-              className="w-full border px-3 py-2 rounded"
-              placeholder="Short Description"
-            />
-            <textarea
-              name="ingredients"
-              value={form.ingredients}
-              onChange={handleChange}
-              rows={3}
-              className="w-full border px-3 py-2 rounded"
-              placeholder="Ingredients (one per line)"
-            />
-            <textarea
-              name="preparation"
-              value={form.preparation}
-              onChange={handleChange}
-              rows={3}
-              className="w-full border px-3 py-2 rounded"
-              placeholder="Preparation Steps"
-            />
-            <textarea
-              name="health_benefits"
-              value={form.health_benefits}
-              onChange={handleChange}
-              rows={3}
-              className="w-full border px-3 py-2 rounded"
-              placeholder="Health Benefits"
-            />
-            <input
-              name="image"
-              value={form.image}
-              onChange={handleChange}
-              className="w-full border px-3 py-2 rounded"
-              placeholder="Image URL"
-            />
-            <input
-              name="category"
-              value={form.category}
-              onChange={handleChange}
-              className="w-full border px-3 py-2 rounded"
-              placeholder="Category"
-            />
+            {preview ? (
+              <>
+                <div className="border p-4 rounded bg-white">
+                  <h3 className="font-bold mb-2">Preview:</h3>
+                  <RemedyCard remedy={preview} />
+                </div>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => setPreview(null)}
+                    className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition"
+                  >
+                    Back to Edit
+                  </button>
+                  <button
+                    onClick={handleFinalSubmit}
+                    disabled={finalSubmitting}
+                    className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition disabled:bg-green-400"
+                  >
+                    {finalSubmitting ? 'Submitting...' : 'Submit Final Remedy'}
+                  </button>
+                </div>
+              </>
+            ) : (
+              <>
+                <input
+                  name="title"
+                  value={form.title}
+                  onChange={handleChange}
+                  className="w-full border px-3 py-2 rounded"
+                  placeholder="Title"
+                />
+                <textarea
+                  name="description"
+                  value={form.description}
+                  onChange={handleChange}
+                  rows={2}
+                  className="w-full border px-3 py-2 rounded"
+                  placeholder="Short Description"
+                />
+                <textarea
+                  name="ingredients"
+                  value={form.ingredients}
+                  onChange={handleChange}
+                  rows={3}
+                  className="w-full border px-3 py-2 rounded"
+                  placeholder="Ingredients (one per line)"
+                />
+                <textarea
+                  name="preparation"
+                  value={form.preparation}
+                  onChange={handleChange}
+                  rows={3}
+                  className="w-full border px-3 py-2 rounded"
+                  placeholder="Preparation Steps"
+                />
+                <textarea
+                  name="health_benefits"
+                  value={form.health_benefits}
+                  onChange={handleChange}
+                  rows={3}
+                  className="w-full border px-3 py-2 rounded"
+                  placeholder="Health Benefits"
+                />
+                <input
+                  name="image"
+                  value={form.image}
+                  onChange={handleChange}
+                  className="w-full border px-3 py-2 rounded"
+                  placeholder="Image URL"
+                />
+                <input
+                  name="category"
+                  value={form.category}
+                  onChange={handleChange}
+                  className="w-full border px-3 py-2 rounded"
+                  placeholder="Category"
+                />
 
-            <button
-              onClick={handleSubmit}
-              className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition"
-            >
-              Submit Remedy
-            </button>
+                <div className="flex gap-2">
+                  <button
+                    onClick={handlePreview}
+                    disabled={loadingPreview}
+                    className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition disabled:bg-blue-400"
+                  >
+                    {loadingPreview ? 'Generating Preview...' : 'Preview Remedy'}
+                  </button>
+                  <button
+                    onClick={handleSubmit}
+                    className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition"
+                  >
+                    Submit Remedy
+                  </button>
+                </div>
+              </>
+            )}
           </div>
         )}
       </section>

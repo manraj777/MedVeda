@@ -24,6 +24,7 @@ class Remedy(models.Model):
     is_approved = models.BooleanField(default=True)  # default=True for now
     approved_by = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL, related_name='approved_remedies')
     approved_at = models.DateTimeField(null=True, blank=True)
+    
 
 
     # AI-enhanced suggestion fields
@@ -34,6 +35,9 @@ class Remedy(models.Model):
     ai_health_benefits = models.TextField(blank=True, null=True)
 
     ai_accepted = models.BooleanField(default=False)
+
+    original_input = models.TextField(blank=True, null=True)
+    ai_cleaned=models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
         if not self.slug:
