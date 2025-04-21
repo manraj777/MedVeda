@@ -33,8 +33,12 @@ class ReviewSerializer(serializers.ModelSerializer):
 
 
 class RemedyDetailSerializer(serializers.ModelSerializer):
-    category = CategorySerializer()
+    category = CategorySerializer(read_only=True)
+    category_id = serializers.PrimaryKeyRelatedField(
+        source='category', queryset=Category.objects.all(), write_only=True
+    )
     reviews = ReviewSerializer(many=True, read_only=True)
+    image = serializers.URLField(required=False, allow_blank=True)
     is_saved = serializers.SerializerMethodField()
 
     def get_is_saved(self, obj):
@@ -55,6 +59,7 @@ class RemedyDetailSerializer(serializers.ModelSerializer):
             'health_benefits',
             'image',
             'category',
+            'category_id',
             'rating',
             'reviews',
             'created_at',

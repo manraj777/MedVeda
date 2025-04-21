@@ -118,17 +118,37 @@ def get_saved_remedies(request):
     serializer = RemedyListSerializer(remedies, many=True)
     return Response(serializer.data)
 
+from django.utils.text import slugify
+
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def submit_remedy_raw(request):
-    data = request.data.copy()
-    data['created_by'] = request.user.id
-    data['is_approved'] = False  # mark as pending
+    category_name = request.data.get("category", "General Wellness").strip()
+    category_slug = slugify(category_name) or "general-wellness"
 
-    serializer = RemedyDetailSerializer(data=data)
+    category, _ = Category.objects.get_or_create(
+        name=category_name,
+        defaults={"slug": category_slug}
+    )
+
+    remedy_data = {
+        "title": request.data.get("title", ""),
+        "slug": slugify(request.data.get("title", ""))[:200],
+        "description": request.data.get("description", ""),
+        "ingredients": request.data.get("ingredients", ""),
+        "preparation": request.data.get("preparation", ""),
+        "health_benefits": request.data.get("health_benefits", ""),
+        "image": request.data.get("image", ""),
+        "category": category.id,
+        "created_by": request.user.id,
+        "is_approved": False,
+        "ai_cleaned": False,
+    }
+
+    serializer = RemedyDetailSerializer(data=remedy_data, context={'request': request})
     if serializer.is_valid():
         serializer.save()
-        return Response({'message': 'Remedy submitted successfully!'}, status=201)
+        return Response({'message': '✅ Remedy submitted successfully!'}, status=201)
     return Response(serializer.errors, status=400)
 
 

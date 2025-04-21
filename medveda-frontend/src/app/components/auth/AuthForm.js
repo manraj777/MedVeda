@@ -36,17 +36,21 @@ export default function AuthForm({ mode }) {
     
     // Decode token to get user info
     const decoded = jwtDecode(token);
+
+      // 🪵 Debug log
+  console.log('🔐 JWT Decoded Payload:', decoded);
+  console.log('👤 Logged in as:', user);
+  console.log('🛡️ Is Admin:', decoded.is_admin);
     
     // Store tokens securely (consider using httpOnly cookies in production)
     localStorage.setItem('token', token);
     localStorage.setItem('refreshToken', refresh);
     
     // Update auth context
-    login({
-      username: user.username,
-      email: decoded.email, // From token
-      isAdmin: decoded.is_admin || false // From token
-    }, token);
+   
+  // ✅ Update AuthContext using token only
+  login(decoded, token);  // 🔥 sends decoded payload directly
+
     
     toast.success('Logged in successfully!');
     if (user) {

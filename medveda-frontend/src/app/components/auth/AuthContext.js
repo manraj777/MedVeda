@@ -23,30 +23,36 @@ export const parseToken = (token) => {
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [loaded, setLoaded] = useState(false);
 
   const refreshAuth = () => {
     const token = getToken();
     if (token) {
       const { username, email, isAdmin } = parseToken(token);
-      setUser({ username, email });  // ✅ Now user is an object
-      setIsAdmin(isAdmin);
+      setUser({ username, email });
+      setIsAdmin(isAdmin);  // ✅ This matters
+      
     } else {
       setUser(null);
       setIsAdmin(false);
     }
+    setLoaded(true);
   };
 
+  
   useEffect(() => {
     if (typeof window !== 'undefined') {
       refreshAuth(); // on mount
     }
   }, []); // empty array = only runs once on mount
 
-  const login = (userData, token) => {
+  const login = (decodedUser, token) => {
     storeToken(token);
-    setUser({ username: userData.username, email: userData.email });
-    setIsAdmin(userData.isAdmin || false);
+    setUser({ username: decodedUser.username, email: decodedUser.email || null });
+    setIsAdmin(decodedUser.is_admin === true);
   };
+  
+  
 
   const logout = () => {
     removeToken();
@@ -55,7 +61,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, isAdmin, login, logout }}>
+    <AuthContext.Provider value={{ user, isAdmin, login, logout , loaded}}>
       {children}
     </AuthContext.Provider>
   );

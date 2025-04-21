@@ -14,7 +14,7 @@ class Command(BaseCommand):
             return
 
         user = User.objects.create_user(username=username, email=email, password=password)
-        user.is_admin = True
+        
         user.is_staff = True
         user.is_superuser = True
         user.save()

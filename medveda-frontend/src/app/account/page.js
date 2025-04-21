@@ -158,29 +158,35 @@ export default function AccountPage() {
 
         {showForm && (
   <div className="space-y-4 bg-gray-50 border p-4 rounded">
-    {/* Inputs */}
-    {['title', 'description', 'ingredients', 'preparation', 'health_benefits', 'image', 'category'].map(field => (
-      field !== 'health_benefits' ? (
-        <input
-          key={field}
-          name={field}
-          value={form[field]}
-          onChange={handleChange}
-          className="w-full border px-3 py-2 rounded"
-          placeholder={field.replace('_', ' ').toUpperCase()}
-        />
+    {['title', 'description', 'ingredients', 'preparation', 'health_benefits', 'image', 'category'].map(field => {
+      const isMultiline = ['description', 'ingredients', 'preparation', 'health_benefits'].includes(field);
+      const label = field.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase()); // Title Case
+
+      return isMultiline ? (
+        <div key={field}>
+          <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
+          <textarea
+            name={field}
+            value={form[field]}
+            onChange={handleChange}
+            rows={3}
+            className="w-full border px-3 py-2 rounded"
+            placeholder={`Enter ${label.toLowerCase()}...`}
+          />
+        </div>
       ) : (
-        <textarea
-          key={field}
-          name={field}
-          value={form[field]}
-          onChange={handleChange}
-          rows={3}
-          className="w-full border px-3 py-2 rounded"
-          placeholder="Health Benefits"
-        />
-      )
-    ))}
+        <div key={field}>
+          <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
+          <input
+            name={field}
+            value={form[field]}
+            onChange={handleChange}
+            className="w-full border px-3 py-2 rounded"
+            placeholder={`Enter ${label.toLowerCase()}...`}
+          />
+        </div>
+      );
+    })}
 
     {/* Buttons */}
     <div className="flex flex-wrap gap-4 mt-4">

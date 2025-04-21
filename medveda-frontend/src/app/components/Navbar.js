@@ -3,7 +3,7 @@ import { useAuth } from './auth/AuthContext';
 import { useRouter } from 'next/navigation';
 
 export default function Navbar() {
-  const { user, logout } = useAuth();
+  const { user, logout , isAdmin} = useAuth();
   const router = useRouter();
 
   const handleLogout = () => {
@@ -14,7 +14,7 @@ export default function Navbar() {
     }
   };
 
-  const isAdmin = user?.is_admin;
+
 
   return (
     <nav className="bg-white shadow-md px-6 py-4 flex justify-between items-center">
@@ -31,7 +31,7 @@ export default function Navbar() {
 
         {isAdmin && (
           <a
-            href="/admin"
+            href="/admin/dashboard"
             className="text-xs bg-yellow-100 border border-yellow-500 text-yellow-700 px-2 py-1 rounded"
           >
             🛠 Admin

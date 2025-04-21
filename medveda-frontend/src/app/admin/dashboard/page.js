@@ -6,7 +6,7 @@ import toast from 'react-hot-toast';
 import { useAuth } from '@/app/components/auth/AuthContext';
 
 export default function AdminDashboard() {
-  const { isAdmin } = useAuth();
+  const { isAdmin, loaded } = useAuth();  // ✅ added `loaded`
   const router = useRouter();
   const [pendingRemedies, setPendingRemedies] = useState([]);
   const [approvedRemedies, setApprovedRemedies] = useState([]);
@@ -14,19 +14,18 @@ export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState('pending');
 
   useEffect(() => {
+    if (!loaded) return;  // ✅ wait for AuthContext to initialize
+
     if (!isAdmin) {
       toast.error("Access Denied");
       router.push('/');
       return;
     }
 
+    // ✅ Fetch only if authenticated and admin
     Promise.all([
-      API.get('/remedies/admin/pending/', {
-        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-      }),
-      API.get('/remedies/admin/approved/', {
-        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-      }),
+      API.get('/remedies/admin/pending/'),
+      API.get('/remedies/admin/approved/')
     ])
       .then(([pendingRes, approvedRes]) => {
         setPendingRemedies(pendingRes.data);
@@ -34,13 +33,11 @@ export default function AdminDashboard() {
       })
       .catch(() => toast.error("Failed to load remedies"))
       .finally(() => setLoading(false));
-  }, [isAdmin, router]);
+  }, [loaded, isAdmin, router]); // ✅ added `loaded` as dependency
 
   const handleApprove = async (id) => {
     try {
-      await API.post(`/remedies/admin/approve/${id}/`, {}, {
-        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-      });
+      await API.post(`/remedies/admin/approve/${id}/`);
       toast.success("Remedy approved");
       setPendingRemedies(pendingRemedies.filter(r => r.id !== id));
     } catch {
@@ -51,20 +48,18 @@ export default function AdminDashboard() {
   const handleDelete = async (id, title) => {
     const confirmDelete = confirm(`Are you sure you want to delete "${title}"? This action cannot be undone.`);
     if (!confirmDelete) return;
-  
+
     try {
-      await API.delete(`/remedies/admin/delete/${id}/`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-      });
+      await API.delete(`/remedies/admin/delete/${id}/`);
       toast.success('Remedy deleted successfully');
       setApprovedRemedies((prev) => prev.filter((r) => r.id !== id));
-    } catch (err) {
+    } catch {
       toast.error('Failed to delete remedy');
     }
   };
 
+  // ✅ Prevent any rendering until auth context is fully loaded
+  if (!loaded) return null;
   if (!isAdmin) return null;
   if (loading) return <div className="p-10">Loading dashboard...</div>;
 

@@ -72,7 +72,7 @@ export default function RemedyDetailPage() {
 
   const handleDeleteReview = async (reviewId) => {
     try {
-      await API.delete(`/reviews/${reviewId}/`, {
+      await API.delete(`remedies/reviews/${reviewId}/`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
@@ -122,7 +122,7 @@ export default function RemedyDetailPage() {
     if (!isLoggedIn) return toast.error("Login to save remedies");
     try {
       if (remedy.is_saved) {
-        await API.delete(`/remedies/saved/${remedy.id}/`);
+        await API.delete(`/remedies/unsaved/${remedy.id}/`);
         setRemedy({ ...remedy, is_saved: false });
         toast.success('Removed from saved');
       } else {

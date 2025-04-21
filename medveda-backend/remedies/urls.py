@@ -16,11 +16,11 @@ urlpatterns = [
     path('admin/approve/<int:remedy_id>/', approve_remedy, name='approve-remedy'),
     path('admin/delete/<int:remedy_id>/', delete_remedy),
     path('saved/<int:remedy_id>/', save_remedy, name='save-remedy'),
-    path('saved/<int:remedy_id>/', unsave_remedy, name='unsave-remedy'),
+    path('unsaved/<int:remedy_id>/', unsave_remedy, name='unsave-remedy'),
     path('categories/', category_list),
     path('search/', search_remedies, name='search-remedies'),
     path('my-submissions/', my_submissions, name='my-submissions'),
-    path('reviews/<int:remedy_id>/', ReviewUpdateDeleteView.as_view(), name='review-detail'),
+    path('reviews/<int:pk>/', ReviewUpdateDeleteView.as_view(), name='review-detail'),
 
 
     # ✅ Only slug-based views at the end
