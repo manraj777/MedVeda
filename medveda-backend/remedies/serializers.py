@@ -87,5 +87,23 @@ class RemedyAdminSerializer(serializers.ModelSerializer):
         model = Remedy
         fields = [
             'id', 'title', 'slug', 'category', 'is_approved',
-            'created_by', 'created_at'
+            'created_by', 'created_at',
+            
+        ]
+    def create(self, validated_data):
+        return Remedy.objects.create(**validated_data)
+
+
+# remedies/serializers.py
+class RemedySubmissionSerializer(serializers.ModelSerializer):
+    category_id = serializers.PrimaryKeyRelatedField(
+        source='category', queryset=Category.objects.all()
+    )
+
+    class Meta:
+        model = Remedy
+        fields = [
+            'title', 'slug', 'description', 'ingredients',
+            'preparation', 'health_benefits', 'image',
+            'category_id'
         ]

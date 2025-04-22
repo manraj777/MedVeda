@@ -110,7 +110,9 @@ export default function AccountPage() {
       });
       setPreview(null);
     } catch (err) {
-      toast.error("❌ Submission failed.");
+      console.error("Raw submit error:", err.response?.data);
+    toast.error("❌ Submission failed: " + 
+      JSON.stringify(err.response?.data));
     }
   };
   

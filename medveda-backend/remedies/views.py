@@ -11,7 +11,8 @@ from .serializers import (
     RemedyDetailSerializer,
     CategorySerializer,
     ReviewSerializer,
-    RemedyAdminSerializer
+    RemedyAdminSerializer,
+    RemedySubmissionSerializer
 
 )
 from .permissions import IsReviewAuthorOrReadOnly, IsAdminOrReadOnly
@@ -123,33 +124,35 @@ from django.utils.text import slugify
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def submit_remedy_raw(request):
+    from django.utils.text import slugify
+    from .models import Category
+
+    # ensure category exists
     category_name = request.data.get("category", "General Wellness").strip()
     category_slug = slugify(category_name) or "general-wellness"
-
     category, _ = Category.objects.get_or_create(
         name=category_name,
         defaults={"slug": category_slug}
     )
 
-    remedy_data = {
-        "title": request.data.get("title", ""),
-        "slug": slugify(request.data.get("title", ""))[:200],
-        "description": request.data.get("description", ""),
-        "ingredients": request.data.get("ingredients", ""),
-        "preparation": request.data.get("preparation", ""),
-        "health_benefits": request.data.get("health_benefits", ""),
-        "image": request.data.get("image", ""),
-        "category": category.id,
-        "created_by": request.user.id,
-        "is_approved": False,
-        "ai_cleaned": False,
+    # build only the fields your serializer expects
+    data = {
+        "title":            request.data.get("title", ""),
+        "slug":             slugify(request.data.get("title", ""))[:200],
+        "description":      request.data.get("description", ""),
+        "ingredients":      request.data.get("ingredients", ""),
+        "preparation":      request.data.get("preparation", ""),
+        "health_benefits":  request.data.get("health_benefits", ""),
+        "image":            request.data.get("image", ""),
+        "category_id":      category.id,   # write into category via category_id
     }
 
-    serializer = RemedyDetailSerializer(data=remedy_data, context={'request': request})
+    serializer = RemedySubmissionSerializer(data=data)
     if serializer.is_valid():
-        serializer.save()
+        serializer.save(created_by=request.user, is_approved=False, ai_cleaned=False)
         return Response({'message': '✅ Remedy submitted successfully!'}, status=201)
     return Response(serializer.errors, status=400)
+
 
 
 @api_view(['POST'])
