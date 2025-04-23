@@ -1,36 +1,39 @@
-import '../styles/RemedyCard.css'
+'use client';
+import Link from 'next/link';
+import '../styles/RemedyCard.css';
+
 export default function RemedyCard({ remedy }) {
-  const renderStars = (rating) => '⭐'.repeat(Math.floor(rating));
+  const renderStars = (rating = 0) => {
+    const stars = Math.floor(rating);
+    return '⭐'.repeat(stars);
+  };
 
   return (
-    
-    <div className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow">
-      <div className='relative container'>
-      <img
+    <Link href={`/remedies/${remedy.slug}`} passHref>
+      <div className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow overflow-hidden cursor-pointer">
+        <div className="relative">
+          <img
+            src={remedy.image || '/default-remedy.jpg'}
+            alt={remedy.title || 'Remedy'}
+            className="w-full h-[200px] object-cover"
+          />
+        </div>
 
-        src={remedy.image_url}
-        className="w-full h-[200px] object-cover rounded-t-xl"
-        alt={remedy.title}
-      />
+        <div className="p-4">
+          <h3 className="text-lg font-semibold text-gray-800 line-clamp-1">
+            {remedy.title}
+          </h3>
+          <p className="text-sm text-gray-600 mt-1 line-clamp-3">
+            {remedy.description || 'No description provided.'}
+          </p>
+          <p className="text-yellow-500 mt-2 text-sm">
+            {renderStars(remedy.rating)}
+            <span className="text-gray-600 text-xs ml-1">
+              ({remedy.rating?.toFixed(1) || '0.0'})
+            </span>
+          </p>
+        </div>
       </div>
-      <div className='p-4'>
-      <h3 className="font-semibold">{remedy.title}</h3>
-      <p className="text-sm text-gray-600 mt-2 ">{remedy.description}</p>
-      <p className="text-yellow-500 mt-2">{'⭐'.repeat(Math.floor(remedy.rating))}</p>
-      </div>
-
-//         src={remedy.image}
-//         className="w-full h-40 object-cover rounded"
-//         alt={remedy.title}
-//       />
-//       <h3 className="text-xl font-semibold mt-4">{remedy.title}</h3>
-//       <p className="text-sm text-gray-600">{remedy.description}</p>
-//       <p className="text-yellow-500 mt-2">
-//         {renderStars(remedy.rating)}{' '}
-//         <span className="text-gray-600 text-sm">({remedy.rating?.toFixed(1)})</span>
-//       </p>
-
-    </div>
-    
+    </Link>
   );
 }

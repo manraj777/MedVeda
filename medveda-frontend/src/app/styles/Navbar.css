@@ -1,4 +1,11 @@
 
+.bg-brown-700 {
+  background-color: #8B4513; /* SaddleBrown */
+}
+.hover\:bg-brown-800:hover {
+  background-color: #5C3317; /* Darker brown */
+}
+
 .bg-white\/95 {
   background-color: rgb(255 255 255 / 0.95);
 }
