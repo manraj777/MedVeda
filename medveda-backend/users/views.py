@@ -5,6 +5,10 @@ from rest_framework.permissions import AllowAny
 from .serializers import UserSignupSerializer, UserLoginSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import logout as django_logout
+from remedies.serializers import RemedyListSerializer
+from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.views import TokenObtainPairView
+from .serializers import CustomTokenSerializer
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
@@ -36,3 +40,11 @@ def logout(request):
     response = Response({"detail": "Logged out"})
     response.delete_cookie('access_token')
     return response
+
+
+
+
+
+class CustomTokenObtainPairView(TokenObtainPairView):
+    serializer_class = CustomTokenSerializer
+

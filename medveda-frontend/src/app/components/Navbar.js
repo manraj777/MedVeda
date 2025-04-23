@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 
 import '../styles/Navbar.css'; // Import your CSS file for custom styles
 export default function Navbar() {
-  const { user, logout } = useAuth();
+  const { user, logout , isAdmin} = useAuth();
   const router = useRouter();
 
   const handleLogout = () => {
@@ -13,6 +13,8 @@ export default function Navbar() {
       logout();
       router.push('/');
   };
+
+
 
   return (
     <nav className="bg-white shadow-md px-6 py-4 flex justify-between items-center">
@@ -26,6 +28,16 @@ export default function Navbar() {
         <a href="#remedies" className="hover:text-green-600 transition">Remedies</a>
         <a href="#how-it-works" className="hover:text-green-600 transition">How It Works</a>
         <a href="#testimonials" className="hover:text-green-600 transition">Testimonials</a>
+
+        {isAdmin && (
+          <a
+            href="/admin/dashboard"
+            className="text-xs bg-yellow-100 border border-yellow-500 text-yellow-700 px-2 py-1 rounded"
+          >
+            🛠 Admin
+          </a>
+        )}
+
 
         {user ? (
           <button

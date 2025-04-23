@@ -21,14 +21,16 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
+    <AuthProvider>
     <html lang="en" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      ><AuthProvider>
+      >
         {children}
         <Toaster position="top-right" />
-        </AuthProvider>
+        
       </body>
     </html>
+    </AuthProvider>
   );
 }
