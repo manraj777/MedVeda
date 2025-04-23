@@ -5,7 +5,7 @@ import { useParams, useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import API from '@/app/utils/api';
 import SearchNavbar from '@/app/components/SearchNavbar';
-import Footer from '@/app/components/Footer';
+import Footer from '@/app/components/footer';
 // import { useAuth } from '@/app/components/auth/AuthContext';
 
 export default function RemedyDetailPage() {
