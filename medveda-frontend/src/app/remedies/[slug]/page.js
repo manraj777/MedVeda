@@ -6,7 +6,7 @@ import toast from 'react-hot-toast';
 import API from '@/app/utils/api';
 import SearchNavbar from '@/app/components/SearchNavbar';
 import Footer from '@/app/components/footer';
-// import { useAuth } from '@/app/components/auth/AuthContext';
+import { useAuth } from '@/app/components/auth/AuthContext';
 
 export default function RemedyDetailPage() {
   const { slug } = useParams();
@@ -113,7 +113,18 @@ export default function RemedyDetailPage() {
         <p className="text-gray-600 mb-4">{remedy.description}</p>
 
         <div className="flex flex-wrap gap-4 mb-6">
-          <button className="border px-4 py-2 rounded hover:bg-gray-100 transition">🔗 Share</button>
+        <button
+        aria-label="Copy remedy link to clipboard"
+  className="border px-4 py-2 rounded hover:bg-gray-100 transition"
+  onClick={() => {
+    const url = `${window.location.origin}/remedies/${remedy.slug}`;
+    navigator.clipboard.writeText(url)
+      .then(() => toast.success('🔗 Link copied to clipboard!'))
+      .catch(() => toast.error('❌ Failed to copy link'));
+  }}
+>
+  🔗 Share
+</button>
           <button
   className={`border px-4 py-2 rounded transition ${
     remedy.is_saved ? 'bg-green-100 border-green-300 text-green-700' : 'hover:bg-gray-100'
