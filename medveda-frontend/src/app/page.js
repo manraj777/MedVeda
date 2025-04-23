@@ -6,7 +6,7 @@ import API from './utils/api';
 import Navbar from './components/Navbar';
 import HeroSection from './components/HeroSection';
 import HowItWorks from './components/HowItWorks';
-import Footer from './components/Footer';
+import Footer from './components/footer';
 
 import Testimonials from './components/Testimonials';
 import TrendingRemedies from './components/TrendingRemedies';
@@ -72,21 +72,21 @@ const placeholderRemedies = [
     id: 1,
     title: 'Ginger Tea',
     description: 'Soothes sore throat and relieves congestion.',
-    image_url: 'https://source.unsplash.com/featured/?ginger',
+    image_url: 'https://storage.googleapis.com/uxpilot-auth.appspot.com/038053b96d-8f16e884ccb1716610f6.png',
     rating: 4.5,
   },
   {
     id: 2,
     title: 'Tulsi Decoction',
     description: 'Strengthens immunity and calms the mind.',
-    image_url: 'https://source.unsplash.com/featured/?tulsi,herb',
+    image_url: 'https://storage.googleapis.com/uxpilot-auth.appspot.com/01f63e7d8e-2d486eaa3dbc3e394fda.png',
     rating: 5,
   },
   {
     id: 3,
     title: 'Honey Lemon Water',
     description: 'Boosts metabolism and aids digestion.',
-    image_url: 'https://source.unsplash.com/featured/?lemon,honey',
+    image_url: 'https://storage.googleapis.com/uxpilot-auth.appspot.com/1b2a2c461c-8b831120f9b74b4d882c.png',
     rating: 4,
   },
 ];

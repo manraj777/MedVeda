@@ -1,0 +1,72 @@
+.text-white {
+    --tw-text-opacity: 1;
+    color: rgb(255 255 255 / var(--tw-text-opacity, 1));
+}
+.py-16 {
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+}
+.bg-emerald-900 {
+    --tw-bg-opacity: 1;
+    background-color: rgb(6 78 59 / var(--tw-bg-opacity, 1));
+}
+.px-4 {
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+.mx-auto {
+    margin-left: auto;
+    margin-right: auto;
+}
+@media (min-width: 1280px) {
+    .container {
+        max-width: 1280px;
+    }
+}
+@media (min-width: 768px) {
+    .md\:grid-cols-4 {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+}
+.gap-12 {
+    gap: 3rem;
+}
+.grid {
+    display: grid;
+}
+.font-bold {
+    font-weight: 700;
+}
+.text-2xl {
+    font-size: 1.5rem;
+    line-height: 2rem;
+}
+.mb-4 {
+    margin-bottom: 1rem;
+}
+
+.text-gray-300 {
+    --tw-text-opacity: 1;
+    color: rgb(209 213 219 / var(--tw-text-opacity, 1));
+}
+.text-center {
+    text-align: center !important;
+}
+.pt-8 {
+    padding-top: 2rem;
+}
+.border-emerald-800 {
+    --tw-border-opacity: 1;
+    border-color: rgb(6 95 70 / var(--tw-border-opacity, 1));
+}
+.border-t {
+    border-top-width: 1px;
+}
+.mt-12 {
+    margin-top: 3rem;
+}
+@media (min-width: 1280px) {
+    .container {
+        max-width: 1280px;
+    }
+}

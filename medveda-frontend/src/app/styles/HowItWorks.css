@@ -1,0 +1,97 @@
+.py-20 {
+    padding-top: 5rem;
+    padding-bottom: 5rem;
+}
+.px-4 {
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+.mx-auto {
+    margin-left: auto;
+    margin-right: auto;
+}
+@media (min-width: 1280px) {
+    .container {
+        max-width: 1280px;
+    }
+}
+.container {
+    width: 100%;
+}
+.font-bold {
+    font-weight: 700;
+}
+.text-3xl {
+    font-size: 1.875rem;
+    line-height: 2.25rem;
+}
+.text-center {
+    text-align: center;
+}
+.mb-4 {
+    margin-bottom: 1rem;
+}
+h2{
+    margin: 0;
+}
+@media (min-width: 768px) {
+    .md\:grid-cols-3 {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+.gap-12 {
+    gap: 3rem;
+    padding: 2rem;
+}
+.grid {
+    display: grid;
+}
+.text-center {
+    text-align: center;
+}
+.bg-emerald-100 {
+    --tw-bg-opacity: 1;
+    background-color: rgb(209 250 229 / var(--tw-bg-opacity, 1));
+}
+.rounded-full {
+    border-radius: 9999px;
+}
+.justify-center {
+    justify-content: center;
+}
+.items-center {
+    align-items: center;
+}
+.w-20 {
+    width: 5rem;
+}
+.h-20 {
+    height: 5rem;
+}
+.flex {
+    display: flex;
+}
+.mb-6 {
+    margin-bottom: 1.5rem;
+}
+.mx-auto {
+    margin-left: auto;
+    margin-right: auto;
+}
+.icon-large {
+    width: 8rem; /* 128px */
+    height: 8rem; /* 128px */
+    font-size: 3rem; /* Adjust font size */
+}
+.font-bold {
+    font-weight: 700;
+}
+.text-xl {
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+}
+.text-gray-600 {
+    --tw-text-opacity: 1;
+    color: rgb(75 85 99 / var(--tw-text-opacity, 1));
+}
+  

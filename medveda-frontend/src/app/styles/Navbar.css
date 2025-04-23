@@ -1,0 +1,151 @@
+
+.bg-white\/95 {
+  background-color: rgb(255 255 255 / 0.95);
+}
+.border-gray-100 {
+  --tw-border-opacity: 1;
+  border-color: rgb(243 244 246 / var(--tw-border-opacity, 1));
+}
+.border-b {
+  border-bottom-width: 1px;
+}
+.w-full {
+  width: 100%;
+}
+.z-50 {
+  z-index: 50;
+}
+.fixed {
+  position: fixed;
+}
+.px-4 {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+.mx-auto {
+  margin-left: auto;
+  margin-right: auto;
+}
+@media (min-width: 1280px) {
+  .container {
+      max-width: 1280px;
+  }
+}
+.container {
+  width: 100%;
+}
+.navbar-container {
+  position: fixed; /* Fix the navbar to the top */
+  top: 0; /* Start from the top of the page */
+  left: 0; /* Align to the left */
+  width: 100%; /* Full width */
+  z-index: 50; /* Ensure it appears above other elements */
+  background-color: rgb(255 255 255 / 0.95); /* Slightly transparent white background */
+  border-bottom: 1px solid rgb(243 244 246); /* Add a bottom border */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Optional: Add a shadow for better visibility */
+  padding-left: .7rem !important; /* Adjust padding to match the image */
+  padding-right: 1rem !important; /* Adjust padding to match the image */
+}
+@media (min-width: 1280px) {
+  .navbar-container {
+    padding-left: 2rem; /* Increase padding for larger screens */
+    padding-right: 2rem; /* Increase padding for larger screens */
+  }
+}
+.justify-between {
+  justify-content: space-between;
+}
+.items-center {
+  align-items: center;
+}
+.h-20 {
+  height: 5rem;
+}
+.flex {
+  display: flex;
+}
+.text-emerald-800 {
+  --tw-text-opacity: 1;
+  color: rgb(6 95 70 / var(--tw-text-opacity, 1));
+}
+.font-bold {
+  font-weight: 700;
+}
+.text-2xl {
+  font-size: 1.5rem;
+  line-height: 2rem;
+}
+.cursor-pointer {
+  cursor: pointer;
+}
+.text-emerald-800 {
+  --tw-text-opacity: 1;
+  color: rgb(6 95 70 / var(--tw-text-opacity, 1));
+}
+.text-amber-600 {
+  --tw-text-opacity: 1;
+  color: rgb(217 119 6 / var(--tw-text-opacity, 1));
+}
+@media (min-width: 768px) {
+  .md\:flex {
+      display: flex;
+  }
+}
+/* .hidden {
+  display: none;
+} */
+.text-gray-600 {
+  --tw-text-opacity: 1;
+  color: rgb(75 85 99 / var(--tw-text-opacity, 1));
+}
+.space-x-8 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 0;
+  margin-right: calc(2rem * var(--tw-space-x-reverse));
+  margin-left: calc(2rem * calc(1 - var(--tw-space-x-reverse)));
+}
+a {
+  text-decoration: inherit;
+}
+.text-white {
+  --tw-text-opacity: 1;
+  color: rgb(255 255 255 / var(--tw-text-opacity, 1));
+}
+.py-2 {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+.px-6 {
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+.bg-emerald-700 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(4 120 87 / var(--tw-bg-opacity, 1));
+}
+.rounded-full {
+  border-radius: 9999px;
+}
+[role=button], button {
+  cursor: pointer;
+}
+button {
+  -webkit-appearance: button;
+  appearance: button;
+  /* background-color: transparent; */
+  background-image: none;
+}
+button, select {
+  text-transform: none;
+}
+button {
+  font-family: inherit;
+  font-feature-settings: inherit;
+  font-variation-settings: inherit;
+  font-size: 100%;
+  font-weight: inherit;
+  line-height: inherit;
+  letter-spacing: inherit;
+  /* color: inherit; */
+  margin: 0;
+  /* padding: 0; */
+}
