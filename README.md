@@ -44,7 +44,7 @@
 - Star-based average rating updated in real-time
 - Review deletion support for authors
 
-### 📊 Admin Dashboard
+### 📊 Admin Dashboard (In Progress)
 - View total, approved, and pending submissions
 - Approve, delete, or moderate remedies
 - Compact dashboard with minimal controls
