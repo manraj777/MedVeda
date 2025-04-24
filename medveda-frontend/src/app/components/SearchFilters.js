@@ -6,7 +6,7 @@ export default function SearchFilters({ filters, categories, onChange }) {
         <h2 className="text-lg font-semibold mb-4">Filters</h2>
         <div className='space-y-4'>
           <div className='sspace-y-2'>
-        <h3 class="font-medium text-[#6B4423]">Sort By</h3>
+        <h3 className="font-medium text-[#6B4423]">Sort By</h3>
         
         <select
           name="category"
