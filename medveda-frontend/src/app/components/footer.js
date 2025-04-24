@@ -5,8 +5,8 @@ export default function Footer() {
         <div className="container mx-auto px-4">
 
             <div id="footer-brand">
-              <h3 className="text-2xl font-bold mb-4">Med<span className="text-amber-400">Veda</span></h3>
-              <p className="text-gray-300">Ancient wisdom for modern wellness</p>
+              <h3 className="text-2xl font-bold">Med<span className="text-amber-400">Veda</span></h3>
+              <p className="text-gray-300 mb-4">Ancient wisdom for modern wellness</p>
             </div>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
                   

@@ -13,7 +13,7 @@ export default function RemedyCard({ remedy }) {
       <div className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow overflow-hidden cursor-pointer">
         <div className="relative">
           <img
-            src={remedy.image || '/default-remedy.jpg'}
+            src={remedy.image || 'https://storage.googleapis.com/uxpilot-auth.appspot.com/0461b06c78-28d93f7d631561f5f09e.png'}
             alt={remedy.title || 'Remedy'}
             className="w-full h-[200px] object-cover"
           />
